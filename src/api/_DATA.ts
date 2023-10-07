@@ -174,63 +174,64 @@ function formatQuestion(question: {
 }
 
 export function _saveQuestion(question: {
-  optionOneText: string;
-  optionTwoText: string;
-  author: UserId;
+  optionOneText?: string | null;
+  optionTwoText?: string | null;
+  author?: UserId | null;
 }) {
   return new Promise<Question>((resolve, reject) => {
-    if (!question.optionOneText || !question.optionTwoText || !question.author) {
+    const { optionOneText, optionTwoText, author } = question;
+    if (!optionOneText || !optionTwoText || !author) {
       reject("Please provide optionOneText, optionTwoText, and author");
+    } else {
+      const formattedQuestion = formatQuestion({ optionOneText, optionTwoText, author });
+      setTimeout(() => {
+        questions = {
+          ...questions,
+          [formattedQuestion.id]: formattedQuestion,
+        };
+
+        resolve(formattedQuestion);
+      }, 1000);
     }
-
-    const formattedQuestion = formatQuestion(question);
-    setTimeout(() => {
-      questions = {
-        ...questions,
-        [formattedQuestion.id]: formattedQuestion,
-      };
-
-      resolve(formattedQuestion);
-    }, 1000);
   });
 }
 
 export function _saveQuestionAnswer(answer: {
-  authedUser: UserId;
-  qid: QuestionId;
-  answerId: AnswerId;
+  authedUser?: UserId | null;
+  qid?: QuestionId | null;
+  answerId?: AnswerId | null;
 }) {
   return new Promise<boolean>((resolve, reject) => {
     const { authedUser, qid, answerId } = answer;
 
     if (!authedUser || !qid || !answerId) {
       reject("Please provide authedUser, qid, and answer");
+    } else {
+      setTimeout(() => {
+        users = {
+          ...users,
+          [authedUser]: {
+            ...users[authedUser],
+            answers: {
+              ...users[authedUser].answers,
+              [qid]: answerId,
+            },
+          },
+        };
+
+        questions = {
+          ...questions,
+          [qid]: {
+            ...questions[qid],
+            [answerId]: {
+              ...questions[qid][answerId],
+              votes: questions[qid][answerId].votes.concat([authedUser]),
+            },
+          },
+        };
+
+        resolve(true);
+      }, 500);
     }
-
-    setTimeout(() => {
-      users = {
-        ...users,
-        [authedUser]: {
-          ...users[authedUser],
-          answers: {
-            ...users[authedUser].answers,
-            [qid]: answerId,
-          },
-        },
-      };
-
-      questions = {
-        ...questions,
-        [qid]: {
-          ...questions[qid],
-          [answerId]: {
-            ...questions[qid][answerId],
-            votes: questions[qid][answerId].votes.concat([authedUser]),
-          },
-        },
-      };
-
-      resolve(true);
-    }, 500);
   });
 }
