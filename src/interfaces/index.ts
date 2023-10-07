@@ -36,3 +36,9 @@ export interface User {
 export interface UsersDictionary {
   [id: UserId]: User;
 }
+
+export interface AuthedUser {
+  id: string | null;
+  name: string | null;
+  password: string | null;
+}
