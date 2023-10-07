@@ -42,3 +42,9 @@ export interface AuthedUser {
   name: string | null;
   password: string | null;
 }
+
+export interface PublicUser {
+  id: string;
+  name: string;
+  avatarURL: null;
+}
