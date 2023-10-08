@@ -14,7 +14,6 @@ const authSlice = createSlice({
   reducers: {},
 });
 
-export const selectIsAuthenticated = (state: RootState) =>
-  state.auth.id && state.auth.name && state.auth.password;
+export const selectAuthedUser = (state: RootState) => state.auth;
 
 export default authSlice.reducer;
