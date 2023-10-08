@@ -95,5 +95,33 @@ describe("Test login form", () => {
       expect(screen.queryByLabelText("Password")).not.toBeInTheDocument();
       expect(screen.queryByRole("button", { name: "Log In" })).not.toBeInTheDocument();
     });
+
+    test.each([
+      { id: "@wrong-user-1", password: "@wrong-user-1-password" },
+      { id: "@fake-user-1", password: "@wrong-user-1-password" },
+      { id: "@wrong-user-1", password: "@fake-user-1-password" },
+    ])("Show error message when wrong username or password", async ({ id, password }) => {
+      const { user } = renderWithProviders(<LoginForm />);
+
+      const idEle = screen.getByLabelText("Employee ID");
+      await act(async () => {
+        await user.type(idEle, id);
+      });
+
+      const passwordEle = screen.getByLabelText("Password");
+      await act(async () => {
+        await user.type(passwordEle, password);
+      });
+
+      const loginButton = screen.getByRole("button", { name: "Log In" });
+      await act(async () => {
+        await user.click(loginButton);
+      });
+
+      expect(screen.getByText(/incorrect employee id or password/i)).toBeInTheDocument();
+      expect(screen.getByLabelText("Employee ID")).toBeInTheDocument();
+      expect(screen.getByLabelText("Password")).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Log In" })).toBeInTheDocument();
+    });
   });
 });
