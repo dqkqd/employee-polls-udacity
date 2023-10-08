@@ -6,13 +6,24 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import Home from "./components/Home";
+import ProtectedRoutes from "./components/ProtectedRoutes";
 import LoginPage from "./features/auth/LoginPage";
 import { fetchUsers } from "./features/users/usersSlice";
 
 const router = createBrowserRouter([
   {
-    path: "/login",
-    element: <LoginPage />,
+    element: <ProtectedRoutes />,
+    children: [
+      {
+        path: "/",
+        element: <Home />,
+      },
+      {
+        path: "login",
+        element: <LoginPage />,
+      },
+    ],
   },
 ]);
 
