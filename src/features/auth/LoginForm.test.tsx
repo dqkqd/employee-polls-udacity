@@ -1,6 +1,8 @@
 import { act, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, RouterProvider, createMemoryRouter } from "react-router-dom";
+import { routesConfig } from "../../routes";
+import { initialUsers } from "../../utils/test-data";
 import { renderWithProviders } from "../../utils/test-utils";
 import LoginForm from "./LoginForm";
 
@@ -96,6 +98,40 @@ describe("Test login form", () => {
       });
 
       expect(screen.getByRole("button", { name: "Log In" })).toBeEnabled();
+    });
+
+    it("Navigate to '/' if user existed", async () => {
+      const routes = createMemoryRouter(routesConfig, {
+        initialEntries: ["/login"],
+      });
+
+      const user = userEvent.setup();
+
+      renderWithProviders(<RouterProvider router={routes} />, {
+        preloadedState: {
+          users: initialUsers,
+        },
+      });
+
+      const inputId = screen.getByLabelText("Employee ID");
+      await act(async () => {
+        await user.type(inputId, "@fake-user-1");
+      });
+      expect(screen.getByRole("button", { name: "Log In" })).toBeDisabled();
+
+      const password = screen.getByLabelText("Password");
+      await act(async () => {
+        await user.type(password, "@fake-user-1-password");
+      });
+
+      const loginButton = screen.getByRole("button", { name: "Log In" });
+      await act(async () => {
+        await user.click(loginButton);
+      });
+
+      expect(screen.queryByLabelText("Employee ID")).not.toBeInTheDocument();
+      expect(screen.queryByLabelText("Password")).not.toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: "Log In" })).not.toBeInTheDocument();
     });
   });
 });
