@@ -3,28 +3,12 @@ import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { store } from "./app/store";
-import Home from "./components/Home";
-import ProtectedRoutes from "./components/ProtectedRoutes";
-import LoginPage from "./features/auth/LoginPage";
 import { fetchUsers } from "./features/users/usersSlice";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
+import { routesConfig } from "./routes";
 
-const router = createBrowserRouter([
-  {
-    element: <ProtectedRoutes />,
-    children: [
-      {
-        path: "/",
-        element: <Home />,
-      },
-      {
-        path: "login",
-        element: <LoginPage />,
-      },
-    ],
-  },
-]);
+const router = createBrowserRouter(routesConfig);
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 
