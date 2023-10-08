@@ -1,14 +1,24 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { Button, FormControl, IconButton, Input, InputAdornment, InputLabel } from "@mui/material";
-import { useState } from "react";
+import {
+  Button,
+  CircularProgress,
+  FormControl,
+  IconButton,
+  Input,
+  InputAdornment,
+  InputLabel,
+  Typography,
+} from "@mui/material";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../app/hook";
+import { useAppDispatch, useAuth } from "../../app/hook";
 import { validateUser } from "./authSlice";
 
 const LoginForm = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  const auth = useAuth();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -28,11 +38,14 @@ const LoginForm = () => {
 
   const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const user = await dispatch(validateUser({ id, password })).unwrap();
-    if (user) {
+    await dispatch(validateUser({ id, password }));
+  };
+
+  useEffect(() => {
+    if (auth.status === "success") {
       navigate("/");
     }
-  };
+  }, [auth, navigate]);
 
   return (
     <>
@@ -63,11 +76,17 @@ const LoginForm = () => {
       <Button
         variant="contained"
         onClick={handleLogin}
-        disabled={!id || !password}
+        disabled={!id || !password || auth.status === "loading"}
         data-testid="login-form-login-button"
       >
-        Log In
+        {auth.status === "loading" ? <CircularProgress /> : "Log In"}
       </Button>
+
+      {auth.status === "failed" && (
+        <Typography fontSize={13} color="red">
+          Incorrect Employee ID or Password
+        </Typography>
+      )}
     </>
   );
 };

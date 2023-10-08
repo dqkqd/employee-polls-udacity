@@ -12,6 +12,7 @@ const initialState: AuthedUser = {
   id: null,
   name: null,
   password: null,
+  status: "idle",
 };
 
 export const validateUser = createAsyncThunk(
@@ -31,11 +32,21 @@ const authSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(validateUser.fulfilled, (state, action) => {
-      if (action.payload) {
-        return action.payload;
-      }
-    });
+    builder
+      .addCase(validateUser.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(validateUser.fulfilled, (state, action) => {
+        if (action.payload) {
+          const { id, name, password } = action.payload;
+          return { id, name, password, status: "success" };
+        } else {
+          state.status = "failed";
+        }
+      })
+      .addCase(validateUser.rejected, (state) => {
+        state.status = "failed";
+      });
   },
 });
 

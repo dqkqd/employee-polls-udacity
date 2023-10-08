@@ -41,6 +41,7 @@ export interface AuthedUser {
   id: string | null;
   name: string | null;
   password: string | null;
+  status: "idle" | "success" | "loading" | "failed";
 }
 
 export interface PublicUser {
