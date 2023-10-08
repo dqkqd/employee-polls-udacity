@@ -38,7 +38,7 @@ const LoginForm = () => {
     <>
       <FormControl>
         <InputLabel htmlFor="user-id">Employee ID</InputLabel>
-        <Input id="user-id" value={id} onChange={handleUserId} />
+        <Input id="user-id" value={id} onChange={handleUserId} data-testid="login-form-input-id" />
       </FormControl>
       <FormControl>
         <InputLabel htmlFor="password">Password</InputLabel>
@@ -57,9 +57,15 @@ const LoginForm = () => {
               </IconButton>
             </InputAdornment>
           }
+          data-testid="login-form-input-password"
         />
       </FormControl>
-      <Button variant="contained" onClick={handleLogin} disabled={!id || !password}>
+      <Button
+        variant="contained"
+        onClick={handleLogin}
+        disabled={!id || !password}
+        data-testid="login-form-login-button"
+      >
         Log In
       </Button>
     </>
