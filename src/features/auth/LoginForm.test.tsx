@@ -1,5 +1,4 @@
 import { act, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { MemoryRouter, RouterProvider, createMemoryRouter } from "react-router-dom";
 import { routesConfig } from "../../routes";
 import { initialUsers } from "../../utils/test-data";
@@ -21,9 +20,7 @@ describe("Test login form", () => {
 
   describe("Input", () => {
     it("Write to form should change text", async () => {
-      const user = userEvent.setup();
-
-      renderWithProviders(
+      const { user } = renderWithProviders(
         <MemoryRouter>
           <LoginForm />
         </MemoryRouter>
@@ -45,9 +42,7 @@ describe("Test login form", () => {
     });
 
     it("Toggle should show / hide password", async () => {
-      const user = userEvent.setup();
-
-      renderWithProviders(
+      const { user } = renderWithProviders(
         <MemoryRouter>
           <LoginForm />
         </MemoryRouter>
@@ -76,9 +71,7 @@ describe("Test login form", () => {
 
   describe("Button", () => {
     it("Button is disabled until inputs are not empty", async () => {
-      const user = userEvent.setup();
-
-      renderWithProviders(
+      const { user } = renderWithProviders(
         <MemoryRouter>
           <LoginForm />
         </MemoryRouter>
@@ -105,9 +98,7 @@ describe("Test login form", () => {
         initialEntries: ["/login"],
       });
 
-      const user = userEvent.setup();
-
-      renderWithProviders(<RouterProvider router={routes} />, {
+      const { user } = renderWithProviders(<RouterProvider router={routes} />, {
         preloadedState: {
           users: initialUsers,
         },
