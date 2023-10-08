@@ -1,6 +1,6 @@
-import Home from "../components/Home";
-import ProtectedRoutes from "../components/ProtectedRoutes";
-import LoginPage from "../features/auth/LoginPage";
+import Home from "../components/Home"
+import ProtectedRoutes from "../components/ProtectedRoutes"
+import LoginPage from "../features/auth/LoginPage"
 
 export const routesConfig = [
   {
@@ -16,4 +16,4 @@ export const routesConfig = [
       },
     ],
   },
-];
+]

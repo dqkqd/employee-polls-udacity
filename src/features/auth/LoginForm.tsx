@@ -1,4 +1,4 @@
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Visibility, VisibilityOff } from "@mui/icons-material"
 import {
   Button,
   CircularProgress,
@@ -8,50 +8,57 @@ import {
   InputAdornment,
   InputLabel,
   Typography,
-} from "@mui/material";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAuth } from "../../app/hook";
-import { validateUser } from "./authSlice";
+} from "@mui/material"
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { useAppDispatch, useAuth } from "../../app/hook"
+import { validateUser } from "./authSlice"
 
 const LoginForm = () => {
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
 
-  const auth = useAuth();
-  const [id, setId] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const auth = useAuth()
+  const [id, setId] = useState("")
+  const [password, setPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleUserId = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setId(e.target.value);
-  };
+    setId(e.target.value)
+  }
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
+    setPassword(e.target.value)
+  }
 
-  const handleClickShowPassword = () => setShowPassword(!showPassword);
-  const handleMouseDownShowPassword = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-  };
+  const handleClickShowPassword = () => setShowPassword(!showPassword)
+  const handleMouseDownShowPassword = (
+    e: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    e.preventDefault()
+  }
 
   const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    await dispatch(validateUser({ id, password }));
-  };
+    e.preventDefault()
+    await dispatch(validateUser({ id, password }))
+  }
 
   useEffect(() => {
     if (auth.status === "success") {
-      navigate("/");
+      navigate("/")
     }
-  }, [auth, navigate]);
+  }, [auth, navigate])
 
   return (
     <>
       <FormControl>
         <InputLabel htmlFor="user-id">Employee ID</InputLabel>
-        <Input id="user-id" value={id} onChange={handleUserId} data-testid="login-form-input-id" />
+        <Input
+          id="user-id"
+          value={id}
+          onChange={handleUserId}
+          data-testid="login-form-input-id"
+        />
       </FormControl>
       <FormControl>
         <InputLabel htmlFor="password">Password</InputLabel>
@@ -88,7 +95,7 @@ const LoginForm = () => {
         </Typography>
       )}
     </>
-  );
-};
+  )
+}
 
-export default LoginForm;
+export default LoginForm

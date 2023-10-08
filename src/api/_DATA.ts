@@ -5,7 +5,7 @@ import type {
   QuestionsDictionary,
   UserId,
   UsersDictionary,
-} from "../interfaces";
+} from "../interfaces"
 
 let users: UsersDictionary = {
   sarahedo: {
@@ -54,7 +54,7 @@ let users: UsersDictionary = {
     },
     questions: [],
   },
-};
+}
 
 let questions: QuestionsDictionary = {
   "8xf0y6ziyjabvozdd253nd": {
@@ -135,28 +135,31 @@ let questions: QuestionsDictionary = {
       text: "deploy to production once every month",
     },
   },
-};
+}
 
 function generateUID() {
-  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  return (
+    Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15)
+  )
 }
 
 export function _getUsers() {
   return new Promise<UsersDictionary>((resolve) => {
-    setTimeout(() => resolve({ ...users }), 1000);
-  });
+    setTimeout(() => resolve({ ...users }), 1000)
+  })
 }
 
 export function _getQuestions() {
   return new Promise<QuestionsDictionary>((resolve) => {
-    setTimeout(() => resolve({ ...questions }), 1000);
-  });
+    setTimeout(() => resolve({ ...questions }), 1000)
+  })
 }
 
 function formatQuestion(question: {
-  optionOneText: string;
-  optionTwoText: string;
-  author: UserId;
+  optionOneText: string
+  optionTwoText: string
+  author: UserId
 }): Question {
   return {
     id: generateUID(),
@@ -170,42 +173,46 @@ function formatQuestion(question: {
       votes: [],
       text: question.optionTwoText,
     },
-  };
+  }
 }
 
 export function _saveQuestion(question: {
-  optionOneText?: string | null;
-  optionTwoText?: string | null;
-  author?: UserId | null;
+  optionOneText?: string | null
+  optionTwoText?: string | null
+  author?: UserId | null
 }) {
   return new Promise<Question>((resolve, reject) => {
-    const { optionOneText, optionTwoText, author } = question;
+    const { optionOneText, optionTwoText, author } = question
     if (!optionOneText || !optionTwoText || !author) {
-      reject("Please provide optionOneText, optionTwoText, and author");
+      reject("Please provide optionOneText, optionTwoText, and author")
     } else {
-      const formattedQuestion = formatQuestion({ optionOneText, optionTwoText, author });
+      const formattedQuestion = formatQuestion({
+        optionOneText,
+        optionTwoText,
+        author,
+      })
       setTimeout(() => {
         questions = {
           ...questions,
           [formattedQuestion.id]: formattedQuestion,
-        };
+        }
 
-        resolve(formattedQuestion);
-      }, 1000);
+        resolve(formattedQuestion)
+      }, 1000)
     }
-  });
+  })
 }
 
 export function _saveQuestionAnswer(answer: {
-  authedUser?: UserId | null;
-  qid?: QuestionId | null;
-  answerId?: AnswerId | null;
+  authedUser?: UserId | null
+  qid?: QuestionId | null
+  answerId?: AnswerId | null
 }) {
   return new Promise<boolean>((resolve, reject) => {
-    const { authedUser, qid, answerId } = answer;
+    const { authedUser, qid, answerId } = answer
 
     if (!authedUser || !qid || !answerId) {
-      reject("Please provide authedUser, qid, and answer");
+      reject("Please provide authedUser, qid, and answer")
     } else {
       setTimeout(() => {
         users = {
@@ -217,7 +224,7 @@ export function _saveQuestionAnswer(answer: {
               [qid]: answerId,
             },
           },
-        };
+        }
 
         questions = {
           ...questions,
@@ -228,10 +235,10 @@ export function _saveQuestionAnswer(answer: {
               votes: questions[qid][answerId].votes.concat([authedUser]),
             },
           },
-        };
+        }
 
-        resolve(true);
-      }, 500);
+        resolve(true)
+      }, 500)
     }
-  });
+  })
 }

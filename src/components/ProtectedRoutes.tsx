@@ -1,9 +1,9 @@
-import { Outlet } from "react-router-dom";
-import { useAuth } from "../app/hook";
+import { Outlet } from "react-router-dom"
+import { useAuth } from "../app/hook"
 
 const ProtectedRoutes = () => {
-  useAuth();
-  return <Outlet />;
-};
+  useAuth()
+  return <Outlet />
+}
 
-export default ProtectedRoutes;
+export default ProtectedRoutes
