@@ -9,7 +9,7 @@ import {
   InputLabel,
   Typography,
 } from "@mui/material"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAppDispatch, useAuth } from "../../app/hook"
 import { validateUser } from "./authSlice"
@@ -40,14 +40,11 @@ const LoginForm = () => {
 
   const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    await dispatch(validateUser({ id, password }))
-  }
-
-  useEffect(() => {
-    if (auth.status === "success") {
+    const user = await dispatch(validateUser({ id, password })).unwrap()
+    if (user) {
       navigate("/")
     }
-  }, [auth, navigate])
+  }
 
   return (
     <>
