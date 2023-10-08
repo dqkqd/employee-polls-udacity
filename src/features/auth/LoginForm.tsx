@@ -1,17 +1,15 @@
-import { Visibility, VisibilityOff } from "@mui/icons-material"
 import {
   Button,
   CircularProgress,
   FormControl,
-  IconButton,
   Input,
-  InputAdornment,
   InputLabel,
   Typography,
 } from "@mui/material"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAppDispatch, useAuth } from "../../app/hook"
+import PasswordInput from "./PasswordInput"
 import { validateUser } from "./authSlice"
 
 const LoginForm = () => {
@@ -21,21 +19,9 @@ const LoginForm = () => {
   const auth = useAuth()
   const [id, setId] = useState("")
   const [password, setPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
 
   const handleUserId = (e: React.ChangeEvent<HTMLInputElement>) => {
     setId(e.target.value)
-  }
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value)
-  }
-
-  const handleClickShowPassword = () => setShowPassword(!showPassword)
-  const handleMouseDownShowPassword = (
-    e: React.MouseEvent<HTMLButtonElement>,
-  ) => {
-    e.preventDefault()
   }
 
   const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -57,26 +43,9 @@ const LoginForm = () => {
           data-testid="login-form-input-id"
         />
       </FormControl>
-      <FormControl>
-        <InputLabel htmlFor="password">Password</InputLabel>
-        <Input
-          id="password"
-          type={showPassword ? "text" : "password"}
-          value={password}
-          onChange={handlePasswordChange}
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownShowPassword}
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          }
-          data-testid="login-form-input-password"
-        />
-      </FormControl>
+
+      <PasswordInput password={password} setPassword={setPassword} />
+
       <Button
         variant="contained"
         onClick={handleLogin}

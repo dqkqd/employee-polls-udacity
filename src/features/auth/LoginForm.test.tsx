@@ -1,4 +1,4 @@
-import { act, screen, within } from "@testing-library/react"
+import { act, screen } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
 import { renderWithProviders } from "../../utils/test-utils"
 import LoginForm from "./LoginForm"
@@ -29,29 +29,6 @@ describe("Test login form", () => {
         await user.type(password, "@fake-password")
       })
       expect(password).toHaveDisplayValue("@fake-password")
-    })
-
-    it("Toggle should show / hide password", async () => {
-      const { user } = renderWithProviders(<LoginForm />)
-
-      const password = screen.getByLabelText("Password")
-      await act(async () => {
-        await user.type(password, "@fake-password")
-      })
-      expect(password).toHaveAttribute("type", "password")
-
-      const toggleButton = within(
-        screen.getByTestId("login-form-input-password"),
-      ).getByRole("button")
-      await act(async () => {
-        await user.click(toggleButton)
-      })
-      expect(password).toHaveAttribute("type", "text")
-
-      await act(async () => {
-        await user.click(toggleButton)
-      })
-      expect(password).toHaveAttribute("type", "password")
     })
   })
 
