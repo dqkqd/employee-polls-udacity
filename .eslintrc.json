@@ -1,11 +1,11 @@
 {
   "extends": [
-    "eslint:recommended",
     "react-app",
+    "react-app/jest",
+    "eslint:recommended",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
-    "plugin:@typescript-eslint/recommended",
-    "react-app/jest"
+    "plugin:@typescript-eslint/recommended"
   ],
   "plugins": ["@typescript-eslint"],
   "rules": {
