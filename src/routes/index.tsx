@@ -10,10 +10,10 @@ export const routesConfig = [
         path: "/",
         element: <Home />,
       },
-      {
-        path: "login",
-        element: <LoginPage />,
-      },
     ],
+  },
+  {
+    path: "login",
+    element: <LoginPage />,
   },
 ]
