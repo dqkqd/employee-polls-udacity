@@ -1,4 +1,4 @@
-import { act, render, screen, within } from "@testing-library/react"
+import { act, render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe } from "vitest"
 import PasswordInput from "./PasswordField"
@@ -58,9 +58,7 @@ describe("Password Input", () => {
     expect(passwordEle).toHaveAttribute("type", "password")
     expect(passwordEle).toHaveDisplayValue("@fake-password")
 
-    const toggleButton = within(
-      screen.getByTestId("login-form-input-password"),
-    ).getByRole("button")
+    const toggleButton = screen.getByRole("button")
 
     await act(async () => {
       await user.click(toggleButton)

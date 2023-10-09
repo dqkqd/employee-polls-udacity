@@ -38,7 +38,6 @@ const PasswordInput = (props: {
         ),
       }}
       label={props.label || "Password"}
-      data-testid="login-form-input-password"
     />
   )
 }
