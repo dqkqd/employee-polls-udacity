@@ -4,12 +4,17 @@ import {
   useSelector,
   type TypedUseSelectorHook,
 } from "react-redux"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { selectAuthedUser } from "../features/auth/authSlice"
+import { notProtectedRoutes } from "../routes"
 import type { AppDispatch, RootState } from "./store"
 
 export const useAuth = () => {
   const authedUser = useAppSelector(selectAuthedUser)
+
+  const location = useLocation()
+  const { pathname } = location
+
   const isAuthenticated = [
     authedUser.id,
     authedUser.name,
@@ -18,10 +23,10 @@ export const useAuth = () => {
 
   const navigate = useNavigate()
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated && !notProtectedRoutes.includes(pathname)) {
       navigate("/login")
     }
-  }, [isAuthenticated, navigate])
+  }, [isAuthenticated, pathname, navigate])
 
   return authedUser
 }
