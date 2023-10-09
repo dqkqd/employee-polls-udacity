@@ -14,7 +14,7 @@ describe("Test signup form", () => {
   })
 
   describe("Input", () => {
-    it.only("Write to form should change text", async () => {
+    it("Write to form should change text", async () => {
       const { user } = renderWithProviders(<SignupForm />, { route: "/signup" })
 
       const idEle = screen.getByLabelText("Employee ID")
@@ -40,6 +40,64 @@ describe("Test signup form", () => {
         await user.type(repeatPasswordEle, "@new-password")
       })
       expect(repeatPasswordEle).toHaveDisplayValue("@new-password")
+    })
+
+    it("Show error when password mismatch", async () => {
+      const { user } = renderWithProviders(<SignupForm />, { route: "/signup" })
+
+      const passwordEle = screen.getByLabelText("Password", {
+        selector: "input",
+      })
+      const repeatPasswordEle = screen.getByLabelText("Re-enter password", {
+        selector: "input",
+      })
+
+      await act(async () => {
+        await user.type(passwordEle, "@new-password")
+        await user.type(repeatPasswordEle, "@new-password2")
+      })
+      expect(screen.getByText("Password did not match")).toBeInTheDocument()
+
+      await act(async () => {
+        await user.clear(repeatPasswordEle)
+        await user.type(repeatPasswordEle, "@new-password")
+      })
+      expect(
+        screen.queryByText("Password did not match"),
+      ).not.toBeInTheDocument()
+    })
+
+    it("Do not show error when password field is empty", async () => {
+      const { user } = renderWithProviders(<SignupForm />, { route: "/signup" })
+
+      const passwordEle = screen.getByLabelText("Password", {
+        selector: "input",
+      })
+      const repeatPasswordEle = screen.getByLabelText("Re-enter password", {
+        selector: "input",
+      })
+
+      // password and repeatPassword is empty
+      expect(
+        screen.queryByText("Password did not match"),
+      ).not.toBeInTheDocument()
+
+      // password is not empty, repeatPassword is empty
+      await act(async () => {
+        await user.type(passwordEle, "@new-password")
+      })
+      expect(
+        screen.queryByText("Password did not match"),
+      ).not.toBeInTheDocument()
+
+      // password is empty, repeatPassword is not empty
+      await act(async () => {
+        await user.clear(passwordEle)
+        await user.type(repeatPasswordEle, "@new-password")
+      })
+      expect(
+        screen.queryByText("Password did not match"),
+      ).not.toBeInTheDocument()
     })
   })
 })
