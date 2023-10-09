@@ -100,4 +100,58 @@ describe("Test signup form", () => {
       ).not.toBeInTheDocument()
     })
   })
+
+  describe("Button", () => {
+    it("Should be disabled when one of the input is empty", async () => {
+      const { user } = renderWithProviders(<SignupForm />, { route: "/signup" })
+      expect(screen.getByRole("button", { name: "Sign up" })).toBeDisabled()
+
+      const inputEle = screen.getByLabelText("Employee ID")
+      const passwordEle = screen.getByLabelText("Password")
+      const repeatPasswordEle = screen.getByLabelText("Re-enter password")
+
+      await act(async () => {
+        await user.type(inputEle, "123")
+        await user.clear(passwordEle)
+        await user.clear(repeatPasswordEle)
+      })
+      expect(screen.getByRole("button", { name: "Sign up" })).toBeDisabled()
+
+      await act(async () => {
+        await user.clear(inputEle)
+        await user.type(passwordEle, "123")
+        await user.clear(repeatPasswordEle)
+      })
+      expect(screen.getByRole("button", { name: "Sign up" })).toBeDisabled()
+
+      await act(async () => {
+        await user.clear(inputEle)
+        await user.clear(passwordEle)
+        await user.type(repeatPasswordEle, "123")
+      })
+      expect(screen.getByRole("button", { name: "Sign up" })).toBeDisabled()
+    })
+  })
+
+  it("Should be disabled when password mismatch", async () => {
+    const { user } = renderWithProviders(<SignupForm />, { route: "/signup" })
+    expect(screen.getByRole("button", { name: "Sign up" })).toBeDisabled()
+
+    const inputEle = screen.getByLabelText("Employee ID")
+    const passwordEle = screen.getByLabelText("Password")
+    const repeatPasswordEle = screen.getByLabelText("Re-enter password")
+
+    await act(async () => {
+      await user.type(inputEle, "123")
+      await user.type(passwordEle, "password123")
+      await user.type(repeatPasswordEle, "password")
+    })
+    expect(screen.getByRole("button", { name: "Sign up" })).toBeDisabled()
+
+    await act(async () => {
+      await user.clear(repeatPasswordEle)
+      await user.type(repeatPasswordEle, "password123")
+    })
+    expect(screen.getByRole("button", { name: "Sign up" })).toBeEnabled()
+  })
 })
