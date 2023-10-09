@@ -1,7 +1,7 @@
 import Home from "../components/Home"
 import ProtectedRoutes from "../components/ProtectedRoutes"
 import LoginPage from "../features/auth/LoginPage"
-import SignupForm from "../features/auth/SignupForm"
+import SignupPage from "../features/auth/SignupPage"
 
 export const routesConfig = [
   {
@@ -19,7 +19,7 @@ export const routesConfig = [
   },
   {
     path: "signup",
-    element: <SignupForm />,
+    element: <SignupPage />,
   },
 ]
 
