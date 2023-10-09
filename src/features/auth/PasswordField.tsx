@@ -22,7 +22,6 @@ const PasswordInput = (props: {
 
   return (
     <TextField
-      id="password"
       type={showPassword ? "text" : "password"}
       value={props.password}
       onChange={handlePasswordChange}
