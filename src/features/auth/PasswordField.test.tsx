@@ -1,7 +1,7 @@
 import { act, render, screen, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe } from "vitest"
-import PasswordInput from "./PasswordInput"
+import PasswordInput from "./PasswordField"
 
 describe("Password Input", () => {
   test.each([

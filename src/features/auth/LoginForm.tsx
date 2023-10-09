@@ -2,7 +2,7 @@ import { Button, CircularProgress, TextField, Typography } from "@mui/material"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAppDispatch, useAuth } from "../../app/hook"
-import PasswordInput from "./PasswordInput"
+import PasswordInput from "./PasswordField"
 import { validateUser } from "./authSlice"
 
 const LoginForm = () => {
