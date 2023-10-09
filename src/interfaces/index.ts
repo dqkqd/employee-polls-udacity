@@ -26,7 +26,7 @@ export interface User {
   id: UserId
   name: string
   password: string
-  avatarURL: null
+  avatarURL: string | null
   questions: QuestionId[]
   answers: {
     [id: QuestionId]: AnswerId
@@ -47,5 +47,5 @@ export interface AuthedUser {
 export interface PublicUser {
   id: string
   name: string
-  avatarURL: null
+  avatarURL: string | null
 }
