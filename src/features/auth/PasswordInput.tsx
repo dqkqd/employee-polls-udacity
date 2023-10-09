@@ -1,16 +1,11 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material"
-import {
-  FormControl,
-  IconButton,
-  Input,
-  InputAdornment,
-  InputLabel,
-} from "@mui/material"
+import { IconButton, InputAdornment, TextField } from "@mui/material"
 import { Dispatch, SetStateAction, useState } from "react"
 
 const PasswordInput = (props: {
   password: string
   setPassword: Dispatch<SetStateAction<string>>
+  label?: string
 }) => {
   const [showPassword, setShowPassword] = useState(false)
 
@@ -26,14 +21,13 @@ const PasswordInput = (props: {
   }
 
   return (
-    <FormControl>
-      <InputLabel htmlFor="password">Password</InputLabel>
-      <Input
-        id="password"
-        type={showPassword ? "text" : "password"}
-        value={props.password}
-        onChange={handlePasswordChange}
-        endAdornment={
+    <TextField
+      id="password"
+      type={showPassword ? "text" : "password"}
+      value={props.password}
+      onChange={handlePasswordChange}
+      InputProps={{
+        endAdornment: (
           <InputAdornment position="end">
             <IconButton
               onClick={handleClickShowPassword}
@@ -42,10 +36,11 @@ const PasswordInput = (props: {
               {showPassword ? <VisibilityOff /> : <Visibility />}
             </IconButton>
           </InputAdornment>
-        }
-        data-testid="login-form-input-password"
-      />
-    </FormControl>
+        ),
+      }}
+      label={props.label || "Password"}
+      data-testid="login-form-input-password"
+    />
   )
 }
 

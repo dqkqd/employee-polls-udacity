@@ -4,6 +4,23 @@ import { describe } from "vitest"
 import PasswordInput from "./PasswordInput"
 
 describe("Password Input", () => {
+  test.each([
+    { label: "", expectedLabel: "Password" },
+    { label: undefined, expectedLabel: "Password" },
+    { label: "Re-enter password", expectedLabel: "Re-enter password" },
+  ])("Render label when defined", ({ label, expectedLabel }) => {
+    render(
+      <PasswordInput
+        password=""
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        setPassword={() => {}}
+        label={label}
+      />,
+    )
+
+    expect(screen.getByLabelText(expectedLabel)).toBeInTheDocument()
+  })
+
   it("Password should be updated", async () => {
     const user = userEvent.setup()
 
