@@ -1,11 +1,4 @@
-import {
-  Button,
-  CircularProgress,
-  FormControl,
-  Input,
-  InputLabel,
-  Typography,
-} from "@mui/material"
+import { Button, CircularProgress, TextField, Typography } from "@mui/material"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAppDispatch, useAuth } from "../../app/hook"
@@ -33,15 +26,13 @@ const LoginForm = () => {
 
   return (
     <>
-      <FormControl>
-        <InputLabel htmlFor="user-id">Employee ID</InputLabel>
-        <Input
-          id="user-id"
-          value={id}
-          onChange={handleUserId}
-          data-testid="login-form-input-id"
-        />
-      </FormControl>
+      <TextField
+        id="user-id"
+        value={id}
+        onChange={handleUserId}
+        label="Employee ID"
+        data-testid="login-form-input-id"
+      />
 
       <PasswordInput password={password} setPassword={setPassword} />
 
