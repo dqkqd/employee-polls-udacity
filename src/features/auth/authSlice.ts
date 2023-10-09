@@ -20,10 +20,10 @@ export const validateUser = createAsyncThunk(
   async ({ id, password }: ValidatingUser, { getState }) => {
     const state = getState()
     const user = selectUserById(state as RootState, id)
-    if (user && user.password === password) {
-      return user
+    if (!user || user.password !== password) {
+      throw new Error("Invalid user or password")
     }
-    return undefined
+    return user
   },
 )
 
@@ -37,12 +37,8 @@ const authSlice = createSlice({
         state.status = "loading"
       })
       .addCase(validateUser.fulfilled, (state, action) => {
-        if (action.payload) {
-          const { id, name, password } = action.payload
-          return { id, name, password, status: "success" }
-        } else {
-          state.status = "failed"
-        }
+        const { id, name, password } = action.payload
+        return { id, name, password, status: "success" }
       })
       .addCase(validateUser.rejected, (state) => {
         state.status = "failed"

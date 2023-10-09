@@ -24,12 +24,11 @@ const LoginForm = () => {
     setId(e.target.value)
   }
 
-  const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    const user = await dispatch(validateUser({ id, password })).unwrap()
-    if (user) {
+    dispatch(validateUser({ id, password })).then(() => {
       navigate("/")
-    }
+    })
   }
 
   return (
