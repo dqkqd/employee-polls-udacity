@@ -55,22 +55,16 @@ const SignupForm = () => {
         />
       </FormControl>
 
-      <PasswordInput
-        password={password}
-        setPassword={setPassword}
-        data-testid="password"
-      />
+      <PasswordInput password={password} setPassword={setPassword} />
       <PasswordInput
         password={repeatPassword}
         setPassword={setRepeatPassword}
         label="Re-enter password"
-        data-testid="repeat-password"
       />
 
       <Button
         variant="contained"
         onClick={handleSignup}
-        data-testid="login-form-login-button"
         disabled={!buttonEnabled}
       >
         Sign up
