@@ -1,4 +1,3 @@
-import type { QuestionsDictionary, UsersDictionary } from "../interfaces"
 import type { AnswerId } from "./../interfaces/index"
 import {
   _getQuestions,
@@ -83,12 +82,14 @@ describe("Test save questions", () => {
 })
 
 describe("Test save question's answers", () => {
-  let users: UsersDictionary
-  let questions: QuestionsDictionary
+  let userId: string
+  let questionId: string
 
   beforeAll(async () => {
-    users = await _getUsers()
-    questions = await _getQuestions()
+    const users = await _getUsers()
+    const questions = await _getQuestions()
+    userId = Object.values(users)[0].id
+    questionId = Object.values(questions)[0].id
   })
 
   describe("success", () => {
@@ -97,8 +98,8 @@ describe("Test save question's answers", () => {
       async (answerId) => {
         await expect(
           _saveQuestionAnswer({
-            authedUser: Object.values(users)[0].id,
-            qid: Object.values(questions)[0].id,
+            authedUser: userId,
+            qid: questionId,
             answerId: answerId as AnswerId,
           }),
         ).resolves.toBe(true)
@@ -114,7 +115,7 @@ describe("Test save question's answers", () => {
           await expect(
             _saveQuestionAnswer({
               authedUser,
-              qid: Object.values(questions)[0].id,
+              qid: questionId,
               answerId: "optionOne",
             }),
           ).rejects.toEqual("Please provide authedUser, qid, and answer")
@@ -124,7 +125,7 @@ describe("Test save question's answers", () => {
       test.each(["", null, undefined])("qid is '%s'", async (qid) => {
         await expect(
           _saveQuestionAnswer({
-            authedUser: Object.values(users)[0].id,
+            authedUser: userId,
             qid,
             answerId: "optionOne",
           }),
@@ -134,8 +135,8 @@ describe("Test save question's answers", () => {
       test.each(["", null, undefined])("answerId is '%s'", async (answerId) => {
         await expect(
           _saveQuestionAnswer({
-            authedUser: Object.values(users)[0].id,
-            qid: Object.values(questions)[0].id,
+            authedUser: userId,
+            qid: questionId,
             answerId: answerId as AnswerId,
           }),
         ).rejects.toEqual("Please provide authedUser, qid, and answer")
@@ -146,8 +147,8 @@ describe("Test save question's answers", () => {
       it("answerId should be optionOne or optionTwo", async () => {
         await expect(
           _saveQuestionAnswer({
-            authedUser: Object.values(users)[0].id,
-            qid: Object.values(questions)[0].id,
+            authedUser: userId,
+            qid: questionId,
             answerId: "optionThree" as AnswerId,
           }),
         ).rejects.toBe(
@@ -159,7 +160,7 @@ describe("Test save question's answers", () => {
         await expect(
           _saveQuestionAnswer({
             authedUser: "123",
-            qid: Object.values(questions)[0].id,
+            qid: questionId,
             answerId: "optionOne",
           }),
         ).rejects.toBe("User id '123' does not exist")
@@ -168,7 +169,7 @@ describe("Test save question's answers", () => {
       it("question id should exist in database", async () => {
         await expect(
           _saveQuestionAnswer({
-            authedUser: Object.values(users)[0].id,
+            authedUser: userId,
             qid: "123",
             answerId: "optionThree" as AnswerId,
           }),
