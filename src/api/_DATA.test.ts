@@ -11,19 +11,34 @@ import { describe, expect, it } from "vitest"
 
 describe("Test save questions", () => {
   it("success", async () => {
+    const users = await _getUsers()
+    const author = Object.values(users)[0].id
+
     const question = await _saveQuestion({
       optionOneText: "option1",
       optionTwoText: "option2",
-      author: "author1",
+      author,
     })
 
     expect(question).toMatchObject({
-      author: "author1",
+      author,
       optionOne: { votes: [], text: "option1" },
       optionTwo: { votes: [], text: "option2" },
     })
 
     await expect(_getQuestions()).resolves.toHaveProperty(question.id)
+  })
+
+  describe("failed", () => {
+    it("author must be existed to add question", async () => {
+      await expect(
+        _saveQuestion({
+          optionOneText: "option1",
+          optionTwoText: "option2",
+          author: "123",
+        }),
+      ).rejects.toBe("User id '123' does not exist")
+    })
   })
 
   describe("empty, null or undefined arguments should not be rejected", () => {

@@ -218,6 +218,8 @@ export function _saveQuestion(question: {
     const { optionOneText, optionTwoText, author } = question
     if (!optionOneText || !optionTwoText || !author) {
       reject("Please provide optionOneText, optionTwoText, and author")
+    } else if (!Object.hasOwn(users, author)) {
+      reject(`User id '${author}' does not exist`)
     } else {
       const formattedQuestion = formatQuestion({
         optionOneText,
