@@ -78,11 +78,16 @@ const SignupForm = () => {
         />
       </FormControl>
 
-      <PasswordInput password={password} setPassword={setPassword} />
+      <PasswordInput
+        password={password}
+        setPassword={setPassword}
+        disabled={loading}
+      />
       <PasswordInput
         password={repeatPassword}
         setPassword={setRepeatPassword}
         label="Re-enter password"
+        disabled={loading}
       />
 
       <Button

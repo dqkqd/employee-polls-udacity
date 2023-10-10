@@ -6,6 +6,7 @@ const PasswordInput = (props: {
   password: string
   setPassword: Dispatch<SetStateAction<string>>
   label?: string
+  disabled?: boolean
 }) => {
   const [showPassword, setShowPassword] = useState(false)
 
@@ -38,6 +39,7 @@ const PasswordInput = (props: {
         ),
       }}
       label={props.label || "Password"}
+      disabled={props.disabled}
     />
   )
 }

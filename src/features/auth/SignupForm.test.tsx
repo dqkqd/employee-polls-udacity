@@ -202,6 +202,8 @@ describe("Test signup form", () => {
       expect(screen.getByTestId("signup-loading")).toBeInTheDocument()
       expect(inputEle).toBeDisabled()
       expect(nameEle).toBeDisabled()
+      expect(passwordEle).toBeDisabled()
+      expect(repeatPasswordEle).toBeDisabled()
       expect(button).toBeDisabled()
     })
     it.todo("Successfully signup")
