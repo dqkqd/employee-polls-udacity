@@ -11,17 +11,19 @@ import { describe, expect, it } from "vitest"
 
 describe("Test save questions", () => {
   it("success", async () => {
-    await expect(
-      _saveQuestion({
-        optionOneText: "option1",
-        optionTwoText: "option2",
-        author: "author1",
-      }),
-    ).resolves.toMatchObject({
+    const question = await _saveQuestion({
+      optionOneText: "option1",
+      optionTwoText: "option2",
+      author: "author1",
+    })
+
+    expect(question).toMatchObject({
       author: "author1",
       optionOne: { votes: [], text: "option1" },
       optionTwo: { votes: [], text: "option2" },
     })
+
+    await expect(_getQuestions()).resolves.toHaveProperty(question.id)
   })
 
   describe("empty, null or undefined arguments", () => {
