@@ -69,6 +69,16 @@ describe("Test save questions", () => {
         },
       )
     })
+
+    it("New added options should be different", async () => {
+      await expect(
+        _saveQuestion({
+          optionOneText: "abc",
+          optionTwoText: "abc",
+          author,
+        }),
+      ).rejects.toEqual("Options must be different")
+    })
   })
 })
 
