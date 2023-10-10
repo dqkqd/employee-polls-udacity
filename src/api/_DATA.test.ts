@@ -103,6 +103,15 @@ describe("Test save question's answers", () => {
             answerId: answerId as AnswerId,
           }),
         ).resolves.toBe(true)
+
+        const questions = await _getQuestions()
+        expect(
+          questions[questionId][answerId as AnswerId].votes,
+          // eslint-disable-next-line jest/valid-expect
+        ).to.include(userId)
+
+        const users = await _getUsers()
+        expect(users[userId].answers[questionId]).toStrictEqual(answerId)
       },
     )
   })
