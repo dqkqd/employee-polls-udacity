@@ -8,6 +8,8 @@ describe("Test signup form", () => {
     renderWithProviders(<SignupForm />, { route: "/signup" })
 
     expect(screen.getByLabelText("Employee ID")).toBeInTheDocument()
+    expect(screen.getByLabelText("Name")).toBeInTheDocument()
+    expect(screen.getByLabelText("Avatar URL")).toBeInTheDocument()
     expect(screen.getByLabelText("Password")).toBeInTheDocument()
     expect(screen.getByLabelText("Re-enter password")).toBeInTheDocument()
     expect(screen.getByRole("button", { name: "Sign up" })).toBeInTheDocument()
@@ -23,6 +25,20 @@ describe("Test signup form", () => {
         await user.type(idEle, "@new-user-id")
       })
       expect(idEle).toHaveDisplayValue("@new-user-id")
+
+      const nameEle = screen.getByLabelText("Name")
+      expect(nameEle).toHaveDisplayValue("")
+      await act(async () => {
+        await user.type(nameEle, "@new-user-name")
+      })
+      expect(nameEle).toHaveDisplayValue("@new-user-name")
+
+      const avatarEle = screen.getByLabelText("Avatar URL")
+      expect(avatarEle).toHaveDisplayValue("")
+      await act(async () => {
+        await user.type(avatarEle, "@new-user-avatar")
+      })
+      expect(avatarEle).toHaveDisplayValue("@new-user-avatar")
 
       const passwordEle = screen.getByLabelText("Password", {
         selector: "input",

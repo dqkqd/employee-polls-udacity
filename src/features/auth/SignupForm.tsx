@@ -1,23 +1,22 @@
-import {
-  Button,
-  CircularProgress,
-  Input,
-  InputLabel,
-  Typography,
-} from "@mui/material"
+import { Button, FormControl, TextField, Typography } from "@mui/material"
 import { useState } from "react"
-import { useAuth } from "../../app/hook"
 import PasswordInput from "./PasswordField"
 
 const SignupForm = () => {
-  const auth = useAuth()
   const [id, setId] = useState("")
+  const [name, setName] = useState("")
+  const [avatar, setAvatar] = useState("")
   const [password, setPassword] = useState("")
   const [repeatPassword, setRepeatPassword] = useState("")
 
-  const handleUserId = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setId(e.target.value)
-  }
+  const passwordMismatch =
+    password && repeatPassword && password !== repeatPassword
+
+  const buttonEnabled = Boolean(
+    id && password && repeatPassword && password === repeatPassword,
+  )
+
+  const errorMessage = passwordMismatch ? "Password did not match" : ""
 
   const handleSignup = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
@@ -26,13 +25,35 @@ const SignupForm = () => {
 
   return (
     <>
-      <InputLabel htmlFor="user-id">Employee ID</InputLabel>
-      <Input
-        id="user-id"
-        value={id}
-        onChange={handleUserId}
-        data-testid="login-form-input-id"
-      />
+      <FormControl>
+        <TextField
+          value={id}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setId(e.target.value)
+          }
+          label="Employee ID"
+        />
+      </FormControl>
+
+      <FormControl>
+        <TextField
+          value={name}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setName(e.target.value)
+          }
+          label="Name"
+        />
+      </FormControl>
+
+      <FormControl>
+        <TextField
+          value={avatar}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setAvatar(e.target.value)
+          }
+          label="Avatar URL"
+        />
+      </FormControl>
 
       <PasswordInput
         password={password}
@@ -50,13 +71,14 @@ const SignupForm = () => {
         variant="contained"
         onClick={handleSignup}
         data-testid="login-form-login-button"
+        disabled={!buttonEnabled}
       >
-        {auth.status === "loading" ? <CircularProgress /> : "Sign up"}
+        Sign up
       </Button>
 
-      {auth.status === "failed" && (
+      {errorMessage && (
         <Typography fontSize={13} color="red">
-          error msg
+          {errorMessage}
         </Typography>
       )}
     </>
