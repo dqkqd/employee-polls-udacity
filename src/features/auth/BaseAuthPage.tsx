@@ -4,8 +4,8 @@ const AuthBasePage = (props: { children: React.ReactNode }) => {
   return (
     <Box justifyContent="center" display="flex" mt={10}>
       <Stack
-        sx={{ width: "300px" }}
-        spacing={2}
+        sx={{ width: "400px" }}
+        spacing={3}
         component="form"
         style={{ textAlign: "center" }}
       >
