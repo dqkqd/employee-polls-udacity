@@ -170,4 +170,11 @@ describe("Test signup form", () => {
     })
     expect(screen.getByRole("button", { name: "Sign up" })).toBeEnabled()
   })
+
+  describe("Signup", () => {
+    it.todo("Loading should disable form and button")
+    it.todo("Successfully signup")
+    it.todo("Cannot signup when user id existed")
+    it.todo("Should show error on failure")
+  })
 })
