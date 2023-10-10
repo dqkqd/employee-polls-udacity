@@ -1,26 +1,46 @@
-import { Button, FormControl, TextField, Typography } from "@mui/material"
+import {
+  Button,
+  CircularProgress,
+  FormControl,
+  TextField,
+  Typography,
+} from "@mui/material"
 import { useState } from "react"
+import { useAppDispatch, useAuth } from "../../app/hook"
 import PasswordInput from "./PasswordField"
+import { signupUser } from "./authSlice"
 
 const SignupForm = () => {
+  const auth = useAuth()
+  const dispatch = useAppDispatch()
+
   const [id, setId] = useState("")
   const [name, setName] = useState("")
   const [avatar, setAvatar] = useState("")
   const [password, setPassword] = useState("")
   const [repeatPassword, setRepeatPassword] = useState("")
 
+  const loading = auth.status === "loading"
+
   const passwordMismatch =
     password && repeatPassword && password !== repeatPassword
 
   const buttonEnabled = Boolean(
-    id && name && password && repeatPassword && password === repeatPassword,
+    !loading &&
+      id &&
+      name &&
+      password &&
+      repeatPassword &&
+      password === repeatPassword,
   )
 
   const errorMessage = passwordMismatch ? "Password did not match" : ""
 
-  const handleSignup = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSignup = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    console.log("Sign Up")
+    dispatch(signupUser({ id, name, password, avatarURL: avatar })).then(() => {
+      console.log("ok")
+    })
   }
 
   return (
@@ -32,6 +52,7 @@ const SignupForm = () => {
             setId(e.target.value)
           }
           label="Employee ID"
+          disabled={loading}
         />
       </FormControl>
 
@@ -42,6 +63,7 @@ const SignupForm = () => {
             setName(e.target.value)
           }
           label="Name"
+          disabled={loading}
         />
       </FormControl>
 
@@ -52,6 +74,7 @@ const SignupForm = () => {
             setAvatar(e.target.value)
           }
           label="Avatar URL"
+          disabled={loading}
         />
       </FormControl>
 
@@ -67,7 +90,11 @@ const SignupForm = () => {
         onClick={handleSignup}
         disabled={!buttonEnabled}
       >
-        Sign up
+        {loading ? (
+          <CircularProgress data-testid="signup-loading" />
+        ) : (
+          "Sign up"
+        )}
       </Button>
 
       {errorMessage && (

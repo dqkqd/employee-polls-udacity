@@ -180,7 +180,30 @@ describe("Test signup form", () => {
   })
 
   describe("Signup", () => {
-    it.todo("Loading should disable form and button")
+    it.only("Loading should disable form and button", async () => {
+      const { user } = renderWithProviders(<SignupForm />, { route: "/signup" })
+
+      const inputEle = screen.getByLabelText("Employee ID")
+      const nameEle = screen.getByLabelText("Name")
+      const passwordEle = screen.getByLabelText("Password")
+      const repeatPasswordEle = screen.getByLabelText("Re-enter password")
+
+      await act(async () => {
+        await user.type(inputEle, "123")
+        await user.type(nameEle, "123")
+        await user.type(passwordEle, "password123")
+        await user.type(repeatPasswordEle, "password123")
+      })
+
+      const button = screen.getByRole("button", { name: "Sign up" })
+      await act(async () => {
+        await user.click(button)
+      })
+      expect(screen.getByTestId("signup-loading")).toBeInTheDocument()
+      expect(inputEle).toBeDisabled()
+      expect(nameEle).toBeDisabled()
+      expect(button).toBeDisabled()
+    })
     it.todo("Successfully signup")
     it.todo("Cannot signup when user id existed")
     it.todo("Should show error on failure")
