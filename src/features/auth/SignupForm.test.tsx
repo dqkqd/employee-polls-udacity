@@ -1,5 +1,6 @@
-import { act, screen } from "@testing-library/react"
+import { act, screen, waitFor } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
+import { getUsers } from "../../api"
 import { renderWithProviders } from "../../utils/test-utils"
 import SignupForm from "./SignupForm"
 
@@ -180,7 +181,7 @@ describe("Test signup form", () => {
   })
 
   describe("Signup", () => {
-    it.only("Loading should disable form and button", async () => {
+    it("Loading should disable form and button", async () => {
       const { user } = renderWithProviders(<SignupForm />, { route: "/signup" })
 
       const inputEle = screen.getByLabelText("Employee ID")
@@ -206,8 +207,54 @@ describe("Test signup form", () => {
       expect(repeatPasswordEle).toBeDisabled()
       expect(button).toBeDisabled()
     })
-    it.todo("Successfully signup")
-    it.todo("Cannot signup when user id existed")
-    it.todo("Should show error on failure")
+
+    it("Cannot signup when user id existed", async () => {
+      const users = await getUsers()
+      const userId = Object.values(users)[0].id
+
+      const { user } = renderWithProviders(<></>, { route: "/signup" })
+
+      const inputEle = screen.getByLabelText("Employee ID")
+      const nameEle = screen.getByLabelText("Name")
+      const passwordEle = screen.getByLabelText("Password")
+      const repeatPasswordEle = screen.getByLabelText("Re-enter password")
+      const button = screen.getByRole("button", { name: "Sign up" })
+
+      await act(async () => {
+        await user.type(inputEle, userId)
+        await user.type(nameEle, "123")
+        await user.type(passwordEle, "password123")
+        await user.type(repeatPasswordEle, "password123")
+        await user.click(button)
+      })
+
+      await waitFor(() => {
+        expect(
+          screen.getByText("Please use different employee id"),
+        ).toBeInTheDocument()
+      })
+    })
+
+    it("Navigate to '/' when succeeded", async () => {
+      const { user } = renderWithProviders(<></>, { route: "/signup" })
+
+      const inputEle = screen.getByLabelText("Employee ID")
+      const nameEle = screen.getByLabelText("Name")
+      const passwordEle = screen.getByLabelText("Password")
+      const repeatPasswordEle = screen.getByLabelText("Re-enter password")
+      const button = screen.getByRole("button", { name: "Sign up" })
+
+      await act(async () => {
+        await user.type(inputEle, "123456")
+        await user.type(nameEle, "123")
+        await user.type(passwordEle, "password123")
+        await user.type(repeatPasswordEle, "password123")
+        await user.click(button)
+      })
+
+      await waitFor(() => {
+        expect(screen.queryByText("Sign Up")).not.toBeInTheDocument()
+      })
+    })
   })
 })

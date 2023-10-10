@@ -37,7 +37,7 @@ export const validateUser = createAsyncThunk(
 
 export const signupUser = createAsyncThunk(
   "auth/signup",
-  async (user: RegisteringUser, { getState }) => {
+  async (user: RegisteringUser) => {
     const result = await saveUser(user)
     return result
   },

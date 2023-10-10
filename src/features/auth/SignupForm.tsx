@@ -6,13 +6,16 @@ import {
   Typography,
 } from "@mui/material"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { useAppDispatch, useAuth } from "../../app/hook"
 import PasswordInput from "./PasswordField"
 import { signupUser } from "./authSlice"
 
 const SignupForm = () => {
-  const auth = useAuth()
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+
+  const auth = useAuth()
 
   const [id, setId] = useState("")
   const [name, setName] = useState("")
@@ -34,13 +37,22 @@ const SignupForm = () => {
       password === repeatPassword,
   )
 
-  const errorMessage = passwordMismatch ? "Password did not match" : ""
+  let errorMessage = ""
+  if (auth.status === "failed") {
+    errorMessage = "Please use different employee id"
+  } else if (passwordMismatch) {
+    errorMessage = "Password did not match"
+  }
 
   const handleSignup = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    dispatch(signupUser({ id, name, password, avatarURL: avatar })).then(() => {
-      console.log("ok")
-    })
+    dispatch(signupUser({ id, name, password, avatarURL: avatar })).then(
+      (e) => {
+        if (e.meta.requestStatus === "fulfilled") {
+          navigate("/")
+        }
+      },
+    )
   }
 
   return (
