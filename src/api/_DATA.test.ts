@@ -10,10 +10,13 @@ import {
 import { describe, expect, it } from "vitest"
 
 describe("Test save questions", () => {
-  it("success", async () => {
+  let author: string
+  beforeAll(async () => {
     const users = await _getUsers()
-    const author = Object.values(users)[0].id
+    author = Object.values(users)[0].id
+  })
 
+  it("success", async () => {
     const question = await _saveQuestion({
       optionOneText: "option1",
       optionTwoText: "option2",
