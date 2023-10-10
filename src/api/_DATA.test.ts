@@ -7,7 +7,7 @@ import {
   _saveQuestionAnswer,
 } from "./_DATA"
 
-import { describe, expect, it, vi } from "vitest"
+import { describe, expect, it } from "vitest"
 
 describe("Test save questions", () => {
   it("success", async () => {
@@ -114,57 +114,35 @@ describe("Test save question's answers", () => {
 
     describe("valid arguments but do not exist", () => {
       it("answerId should be optionOne or optionTwo", async () => {
-        vi.useFakeTimers()
-        expect.assertions(1)
-
-        try {
+        await expect(
           _saveQuestionAnswer({
             authedUser: Object.values(users)[0].id,
             qid: Object.values(questions)[0].id,
             answerId: "optionThree" as AnswerId,
-          })
-
-          vi.runAllTimers()
-        } catch (err) {
-          // eslint-disable-next-line jest/no-conditional-expect
-          expect(err).toBeInstanceOf(TypeError)
-        }
+          }),
+        ).rejects.toBe(
+          "Answer should be 'optionOne' or 'optionTwo', not 'optionThree'",
+        )
       })
 
-      it("user should exist in database", () => {
-        vi.useFakeTimers()
-        expect.assertions(1)
-
-        try {
+      it("user should exist in database", async () => {
+        await expect(
           _saveQuestionAnswer({
             authedUser: "123",
             qid: Object.values(questions)[0].id,
-            answerId: "optionThree" as AnswerId,
-          })
-
-          vi.runAllTimers()
-        } catch (err) {
-          // eslint-disable-next-line jest/no-conditional-expect
-          expect(err).toBeInstanceOf(TypeError)
-        }
+            answerId: "optionOne",
+          }),
+        ).rejects.toBe("User id '123' does not exist")
       })
 
-      it("question id should exist in database", () => {
-        vi.useFakeTimers()
-        expect.assertions(1)
-
-        try {
+      it("question id should exist in database", async () => {
+        await expect(
           _saveQuestionAnswer({
             authedUser: Object.values(users)[0].id,
             qid: "123",
             answerId: "optionThree" as AnswerId,
-          })
-
-          vi.runAllTimers()
-        } catch (err) {
-          // eslint-disable-next-line jest/no-conditional-expect
-          expect(err).toBeInstanceOf(TypeError)
-        }
+          }),
+        ).rejects.toBe("Question id '123' does not exist")
       })
     })
   })

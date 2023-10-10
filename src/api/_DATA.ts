@@ -3,6 +3,7 @@ import type {
   Question,
   QuestionId,
   QuestionsDictionary,
+  User,
   UserId,
   UsersDictionary,
 } from "../interfaces"
@@ -150,6 +151,38 @@ export function _getUsers() {
   })
 }
 
+export function _saveUser(user: {
+  id: string
+  password: string
+  name: string
+  avatarURL?: string
+}) {
+  return new Promise<User>((resolve, reject) => {
+    const { id, password, name, avatarURL } = user
+    if (!id || !name || !password) {
+      reject("Please provide id, name, password")
+    } else if (Object.hasOwn(users, id)) {
+      reject("User already existed")
+    } else {
+      const formattedUser = {
+        ...user,
+        avatarURL: avatarURL ?? null,
+        answers: {},
+        questions: [],
+      }
+
+      setTimeout(() => {
+        users = {
+          ...users,
+          [id]: formattedUser,
+        }
+
+        resolve(formattedUser)
+      }, 50)
+    }
+  })
+}
+
 export function _getQuestions() {
   return new Promise<QuestionsDictionary>((resolve) => {
     setTimeout(() => resolve({ ...questions }), 1000)
@@ -213,6 +246,12 @@ export function _saveQuestionAnswer(answer: {
 
     if (!authedUser || !qid || !answerId) {
       reject("Please provide authedUser, qid, and answer")
+    } else if (!Object.hasOwn(users, authedUser)) {
+      reject(`User id '${authedUser}' does not exist`)
+    } else if (!Object.hasOwn(questions, qid)) {
+      reject(`Question id '${qid}' does not exist`)
+    } else if (!["optionOne", "optionTwo"].includes(answerId)) {
+      reject(`Answer should be 'optionOne' or 'optionTwo', not '${answerId}'`)
     } else {
       setTimeout(() => {
         users = {
