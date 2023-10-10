@@ -180,7 +180,7 @@ describe("Test save question's answers", () => {
           _saveQuestionAnswer({
             authedUser: userId,
             qid: "123",
-            answerId: "optionThree" as AnswerId,
+            answerId: "optionOne",
           }),
         ).rejects.toBe("Question id '123' does not exist")
       })
