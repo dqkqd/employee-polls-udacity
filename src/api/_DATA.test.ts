@@ -26,7 +26,7 @@ describe("Test save questions", () => {
     await expect(_getQuestions()).resolves.toHaveProperty(question.id)
   })
 
-  describe("empty, null or undefined arguments", () => {
+  describe("empty, null or undefined arguments should not be rejected", () => {
     test.each([
       ["", "option2", "author1"],
       [undefined, "option2", "author1"],
