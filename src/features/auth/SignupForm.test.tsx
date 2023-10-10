@@ -123,27 +123,33 @@ describe("Test signup form", () => {
       expect(screen.getByRole("button", { name: "Sign up" })).toBeDisabled()
 
       const inputEle = screen.getByLabelText("Employee ID")
+      const nameEle = screen.getByLabelText("Name")
       const passwordEle = screen.getByLabelText("Password")
       const repeatPasswordEle = screen.getByLabelText("Re-enter password")
 
       await act(async () => {
         await user.type(inputEle, "123")
-        await user.clear(passwordEle)
-        await user.clear(repeatPasswordEle)
-      })
-      expect(screen.getByRole("button", { name: "Sign up" })).toBeDisabled()
-
-      await act(async () => {
-        await user.clear(inputEle)
+        await user.type(nameEle, "123")
         await user.type(passwordEle, "123")
-        await user.clear(repeatPasswordEle)
+        await user.type(repeatPasswordEle, "123")
+      })
+      expect(screen.getByRole("button", { name: "Sign up" })).toBeEnabled()
+
+      await act(async () => {
+        await user.clear(inputEle)
       })
       expect(screen.getByRole("button", { name: "Sign up" })).toBeDisabled()
 
       await act(async () => {
-        await user.clear(inputEle)
+        await user.type(inputEle, "123")
+        await user.clear(nameEle)
+      })
+      expect(screen.getByRole("button", { name: "Sign up" })).toBeDisabled()
+
+      await act(async () => {
+        await user.type(nameEle, "123")
         await user.clear(passwordEle)
-        await user.type(repeatPasswordEle, "123")
+        await user.clear(repeatPasswordEle)
       })
       expect(screen.getByRole("button", { name: "Sign up" })).toBeDisabled()
     })
@@ -154,11 +160,13 @@ describe("Test signup form", () => {
     expect(screen.getByRole("button", { name: "Sign up" })).toBeDisabled()
 
     const inputEle = screen.getByLabelText("Employee ID")
+    const nameEle = screen.getByLabelText("Name")
     const passwordEle = screen.getByLabelText("Password")
     const repeatPasswordEle = screen.getByLabelText("Re-enter password")
 
     await act(async () => {
       await user.type(inputEle, "123")
+      await user.type(nameEle, "123")
       await user.type(passwordEle, "password123")
       await user.type(repeatPasswordEle, "password")
     })

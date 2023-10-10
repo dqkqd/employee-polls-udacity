@@ -13,7 +13,7 @@ const SignupForm = () => {
     password && repeatPassword && password !== repeatPassword
 
   const buttonEnabled = Boolean(
-    id && password && repeatPassword && password === repeatPassword,
+    id && name && password && repeatPassword && password === repeatPassword,
   )
 
   const errorMessage = passwordMismatch ? "Password did not match" : ""
