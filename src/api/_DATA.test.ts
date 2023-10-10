@@ -4,6 +4,7 @@ import {
   _getUsers,
   _saveQuestion,
   _saveQuestionAnswer,
+  _saveUser,
 } from "./_DATA"
 
 import { describe, expect, it } from "vitest"
@@ -184,6 +185,46 @@ describe("Test save question's answers", () => {
           }),
         ).rejects.toBe("Question id '123' does not exist")
       })
+    })
+  })
+})
+
+describe("Test save user", () => {
+  it("success", async () => {
+    const user = await _saveUser({
+      id: "123",
+      name: "abc",
+      password: "pw123",
+      avatarURL: "https://picsum.photos/200",
+    })
+
+    const users = await _getUsers()
+    expect(users[user.id]).toMatchObject(user)
+  })
+
+  describe("failed", () => {
+    describe("arguments should not be empty", () => {
+      test.each([
+        { id: "", name: "abc", password: "pw123" },
+        { id: "123", name: "", password: "pw123" },
+        { id: "123", name: "abc", password: "" },
+      ])(
+        "id is $id, name is $name, password is $password",
+        async ({ id, name, password }) => {
+          await expect(_saveUser({ id, name, password })).rejects.toBe(
+            "Please provide id, name, password",
+          )
+        },
+      )
+    })
+
+    it("User already existed", async () => {
+      const users = await _getUsers()
+      const userId = Object.values(users)[0].id
+
+      await expect(
+        _saveUser({ id: userId, name: "abc", password: "pw123" }),
+      ).rejects.toBe("User already existed")
     })
   })
 })
