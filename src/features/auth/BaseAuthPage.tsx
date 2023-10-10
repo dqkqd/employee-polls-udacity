@@ -2,7 +2,7 @@ import { Box, Stack, Typography } from "@mui/material"
 
 const AuthBasePage = (props: { children: React.ReactNode }) => {
   return (
-    <Box justifyContent="center" display="flex" mt={10}>
+    <Box justifyContent="center" display="flex" mt={2}>
       <Stack
         sx={{ width: "400px" }}
         spacing={3}
