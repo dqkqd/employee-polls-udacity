@@ -39,33 +39,33 @@ describe("Test save questions", () => {
         }),
       ).rejects.toBe("User id '123' does not exist")
     })
-  })
 
-  describe("empty, null or undefined arguments should not be rejected", () => {
-    test.each([
-      ["", "option2", "author1"],
-      [undefined, "option2", "author1"],
-      [null, "option2", "author1"],
-      ["option1", "", "author1"],
-      ["option1", undefined, "author1"],
-      ["option1", null, "author1"],
-      ["option1", "option2", ""],
-      ["option1", "option2", undefined],
-      ["option1", "option2", null],
-    ])(
-      "optionOneText is '%s', optionTwoText is '%s', author is '%s'",
-      async (optionOneText, optionTwoText, author) => {
-        await expect(
-          _saveQuestion({
-            optionOneText,
-            optionTwoText,
-            author,
-          }),
-        ).rejects.toEqual(
-          "Please provide optionOneText, optionTwoText, and author",
-        )
-      },
-    )
+    describe("empty, null or undefined arguments should be rejected", () => {
+      test.each([
+        ["", "option2", "author1"],
+        [undefined, "option2", "author1"],
+        [null, "option2", "author1"],
+        ["option1", "", "author1"],
+        ["option1", undefined, "author1"],
+        ["option1", null, "author1"],
+        ["option1", "option2", ""],
+        ["option1", "option2", undefined],
+        ["option1", "option2", null],
+      ])(
+        "optionOneText is '%s', optionTwoText is '%s', author is '%s'",
+        async (optionOneText, optionTwoText, author) => {
+          await expect(
+            _saveQuestion({
+              optionOneText,
+              optionTwoText,
+              author,
+            }),
+          ).rejects.toEqual(
+            "Please provide optionOneText, optionTwoText, and author",
+          )
+        },
+      )
+    })
   })
 })
 
