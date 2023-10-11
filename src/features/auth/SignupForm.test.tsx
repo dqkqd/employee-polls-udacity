@@ -246,14 +246,14 @@ describe("Test signup form", () => {
 
       await act(async () => {
         await user.type(inputEle, "123456")
-        await user.type(nameEle, "123")
+        await user.type(nameEle, "John Wick")
         await user.type(passwordEle, "password123")
         await user.type(repeatPasswordEle, "password123")
         await user.click(button)
       })
 
       await waitFor(() => {
-        expect(screen.queryByText("Sign Up")).not.toBeInTheDocument()
+        expect(screen.getByText("Hello John Wick")).toBeInTheDocument()
       })
     })
   })
