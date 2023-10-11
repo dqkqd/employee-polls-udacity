@@ -127,3 +127,25 @@ describe("Test login form", () => {
     )
   })
 })
+
+it("Navigate to signup page", async () => {
+  const { user } = renderDefault({ route: "/login" })
+  await act(async () => {
+    await user.click(screen.getByText("Sign up"))
+  })
+
+  await waitFor(() => {
+    expect(screen.getByLabelText("sign-up-page-title")).toBeInTheDocument()
+  })
+})
+
+it("Navigate to select login users", async () => {
+  const { user } = renderDefault({ route: "/login" })
+  await act(async () => {
+    await user.click(screen.getByText("Login using a sample account"))
+  })
+
+  await waitFor(() => {
+    expect(screen.getByText("Select employee to login")).toBeInTheDocument()
+  })
+})
