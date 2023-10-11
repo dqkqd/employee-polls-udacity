@@ -57,3 +57,30 @@ export function renderWithProviders(
     ...render(ui, { wrapper: Wrapper, ...renderOptions }),
   }
 }
+
+export function renderDefault({
+  route = "/",
+  preloadedState = {
+    users: initialUsers,
+  },
+  // Automatically create a store instance if no store was passed in
+  store = configureStore({
+    reducer: {
+      auth: authSlice,
+      users: usersSlice,
+    },
+    preloadedState,
+  }),
+  router = createMemoryRouter(routesConfig, {
+    initialEntries: [route],
+  }),
+  ...renderOptions
+}: ExtendedRenderOptions = {}) {
+  return renderWithProviders(<></>, {
+    route,
+    preloadedState,
+    store,
+    router,
+    ...renderOptions,
+  })
+}

@@ -1,12 +1,11 @@
 import { act, screen, waitFor } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
 import { getUsers } from "../../api"
-import { renderWithProviders } from "../../utils/test-utils"
-import SignupForm from "./SignupForm"
+import { renderDefault } from "../../utils/test-utils"
 
 describe("Test signup form", () => {
   it("Render", () => {
-    renderWithProviders(<SignupForm />, { route: "/signup" })
+    renderDefault({ route: "/signup" })
 
     expect(screen.getByLabelText("Employee ID")).toBeInTheDocument()
     expect(screen.getByLabelText("Name")).toBeInTheDocument()
@@ -18,7 +17,7 @@ describe("Test signup form", () => {
 
   describe("Input", () => {
     it("Write to form should change text", async () => {
-      const { user } = renderWithProviders(<SignupForm />, { route: "/signup" })
+      const { user } = renderDefault({ route: "/signup" })
 
       const idEle = screen.getByLabelText("Employee ID")
       expect(idEle).toHaveDisplayValue("")
@@ -60,7 +59,7 @@ describe("Test signup form", () => {
     })
 
     it("Show error when password mismatch", async () => {
-      const { user } = renderWithProviders(<SignupForm />, { route: "/signup" })
+      const { user } = renderDefault({ route: "/signup" })
 
       const passwordEle = screen.getByLabelText("Password", {
         selector: "input",
@@ -85,7 +84,7 @@ describe("Test signup form", () => {
     })
 
     it("Do not show error when password field is empty", async () => {
-      const { user } = renderWithProviders(<SignupForm />, { route: "/signup" })
+      const { user } = renderDefault({ route: "/signup" })
 
       const passwordEle = screen.getByLabelText("Password", {
         selector: "input",
@@ -120,7 +119,7 @@ describe("Test signup form", () => {
 
   describe("Button", () => {
     it("Should be disabled when one of the input is empty", async () => {
-      const { user } = renderWithProviders(<SignupForm />, { route: "/signup" })
+      const { user } = renderDefault({ route: "/signup" })
       expect(screen.getByRole("button", { name: "Sign up" })).toBeDisabled()
 
       const inputEle = screen.getByLabelText("Employee ID")
@@ -157,7 +156,7 @@ describe("Test signup form", () => {
   })
 
   it("Should be disabled when password mismatch", async () => {
-    const { user } = renderWithProviders(<SignupForm />, { route: "/signup" })
+    const { user } = renderDefault({ route: "/signup" })
     expect(screen.getByRole("button", { name: "Sign up" })).toBeDisabled()
 
     const inputEle = screen.getByLabelText("Employee ID")
@@ -182,7 +181,7 @@ describe("Test signup form", () => {
 
   describe("Signup", () => {
     it("Loading should disable form and button", async () => {
-      const { user } = renderWithProviders(<SignupForm />, { route: "/signup" })
+      const { user } = renderDefault({ route: "/signup" })
 
       const inputEle = screen.getByLabelText("Employee ID")
       const nameEle = screen.getByLabelText("Name")
@@ -212,7 +211,7 @@ describe("Test signup form", () => {
       const users = await getUsers()
       const userId = Object.values(users)[0].id
 
-      const { user } = renderWithProviders(<></>, { route: "/signup" })
+      const { user } = renderDefault({ route: "/signup" })
 
       const inputEle = screen.getByLabelText("Employee ID")
       const nameEle = screen.getByLabelText("Name")
@@ -236,7 +235,7 @@ describe("Test signup form", () => {
     })
 
     it("Navigate to '/' when succeeded", async () => {
-      const { user } = renderWithProviders(<></>, { route: "/signup" })
+      const { user } = renderDefault({ route: "/signup" })
 
       const inputEle = screen.getByLabelText("Employee ID")
       const nameEle = screen.getByLabelText("Name")
