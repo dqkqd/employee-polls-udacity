@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { getUser, saveUser } from "../../api"
+import { getUser } from "../../api"
 import type { RootState } from "../../app/store"
 import type { AuthedUser } from "../../interfaces"
+import { addUser } from "../users/usersSlice"
 
 interface ValidatingUser {
   id: string
@@ -35,8 +36,8 @@ export const validateUser = createAsyncThunk(
 
 export const signupUser = createAsyncThunk(
   "auth/signup",
-  async (user: RegisteringUser) => {
-    const result = await saveUser(user)
+  async (user: RegisteringUser, { dispatch }) => {
+    const result = await dispatch(addUser(user)).unwrap()
     return result
   },
 )
@@ -61,7 +62,6 @@ const authSlice = createSlice({
         state.status = "loading"
       })
       .addCase(signupUser.fulfilled, (state, action) => {
-        // TODO(khanhdq) add user to store
         const { id, name, password } = action.payload
         return { id, name, password, status: "success" }
       })

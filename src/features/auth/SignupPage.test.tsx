@@ -228,6 +228,10 @@ describe("Test signup page", () => {
       // eslint-disable-next-line jest/valid-expect
       expect(users.ids).to.be.includes(newUser.id)
       expect(users.entities[newUser.id]).toMatchObject(newUser)
+
+      // user should existed in database as well
+      const usersFromDatabase = await getUsers()
+      expect(usersFromDatabase[newUser.id]).toMatchObject(newUser)
     })
 
     it("Cannot signup when user id existed", async () => {
