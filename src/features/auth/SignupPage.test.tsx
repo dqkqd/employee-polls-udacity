@@ -183,31 +183,44 @@ describe("Test signup page", () => {
   })
 
   describe("Signup", () => {
-    it("Loading should disable form and button", async () => {
-      const { user } = renderDefault({ route: "/signup" })
+    it("Successfully signup user", async () => {
+      const { store, user } = renderDefault({ route: "/signup" })
 
       const inputEle = screen.getByLabelText("Employee ID")
       const nameEle = screen.getByLabelText("Name")
       const passwordEle = screen.getByLabelText("Password")
       const repeatPasswordEle = screen.getByLabelText("Re-enter password")
-
-      await act(async () => {
-        await user.type(inputEle, "123")
-        await user.type(nameEle, "123")
-        await user.type(passwordEle, "password123")
-        await user.type(repeatPasswordEle, "password123")
-      })
-
       const button = screen.getByRole("button", { name: "Sign up" })
+
+      const newUser = {
+        id: "123456",
+        name: "John Wick",
+        password: "password123",
+      }
+
       await act(async () => {
+        await user.type(inputEle, newUser.id)
+        await user.type(nameEle, newUser.name)
+        await user.type(passwordEle, newUser.password)
+        await user.type(repeatPasswordEle, newUser.password)
         await user.click(button)
       })
+
+      // signing up user, everything should be disabled
       expect(screen.getByTestId("signup-loading")).toBeInTheDocument()
       expect(inputEle).toBeDisabled()
       expect(nameEle).toBeDisabled()
       expect(passwordEle).toBeDisabled()
       expect(repeatPasswordEle).toBeDisabled()
       expect(button).toBeDisabled()
+
+      // should moved into home page now
+      await waitFor(() => {
+        expect(screen.getByText(`Hello ${newUser.name}`)).toBeInTheDocument()
+      })
+
+      const { auth } = store.getState()
+      expect(auth).toMatchObject(newUser)
     })
 
     it("Cannot signup when user id existed", async () => {
@@ -234,28 +247,6 @@ describe("Test signup page", () => {
         expect(
           screen.getByText("Please use different employee id"),
         ).toBeInTheDocument()
-      })
-    })
-
-    it("Navigate to '/' when succeeded", async () => {
-      const { user } = renderDefault({ route: "/signup" })
-
-      const inputEle = screen.getByLabelText("Employee ID")
-      const nameEle = screen.getByLabelText("Name")
-      const passwordEle = screen.getByLabelText("Password")
-      const repeatPasswordEle = screen.getByLabelText("Re-enter password")
-      const button = screen.getByRole("button", { name: "Sign up" })
-
-      await act(async () => {
-        await user.type(inputEle, "123456")
-        await user.type(nameEle, "John Wick")
-        await user.type(passwordEle, "password123")
-        await user.type(repeatPasswordEle, "password123")
-        await user.click(button)
-      })
-
-      await waitFor(() => {
-        expect(screen.getByText("Hello John Wick")).toBeInTheDocument()
       })
     })
   })
