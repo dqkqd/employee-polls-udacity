@@ -151,6 +151,15 @@ export function _getUsers() {
   })
 }
 
+export function _getUser(id: string) {
+  return new Promise<User>((resolve, reject) => {
+    if (!Object.hasOwn(users, id)) {
+      reject(`User id '${id}' does not exist`)
+    }
+    setTimeout(() => resolve(users[id]), 100)
+  })
+}
+
 export function _saveUser(user: {
   id: string
   password: string

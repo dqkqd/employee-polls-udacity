@@ -1,5 +1,6 @@
 import {
   _getQuestions,
+  _getUser,
   _getUsers,
   _saveQuestion,
   _saveQuestionAnswer,
@@ -8,6 +9,7 @@ import {
 
 export {
   _getQuestions as getQuestions,
+  _getUser as getUser,
   _getUsers as getUsers,
   _saveQuestion as saveQuestion,
   _saveQuestionAnswer as saveQuestionAnswer,

@@ -1,6 +1,7 @@
 import type { AnswerId } from "./../interfaces/index"
 import {
   _getQuestions,
+  _getUser,
   _getUsers,
   _saveQuestion,
   _saveQuestionAnswer,
@@ -186,6 +187,17 @@ describe("Test save question's answers", () => {
         ).rejects.toBe("Question id '123' does not exist")
       })
     })
+  })
+})
+
+describe("Test get user", () => {
+  it("success", async () => {
+    const users = await _getUsers()
+    const user = Object.values(users)[0]
+    await expect(_getUser(user.id)).resolves.toStrictEqual(user)
+  })
+  it("User does not exist", async () => {
+    await expect(_getUser("123")).rejects.toBe("User id '123' does not exist")
   })
 })
 

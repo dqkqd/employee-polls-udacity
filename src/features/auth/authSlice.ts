@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { getUsers, saveUser } from "../../api"
+import { getUser, saveUser } from "../../api"
 import type { RootState } from "../../app/store"
 import type { AuthedUser } from "../../interfaces"
 
@@ -25,12 +25,11 @@ const initialState: AuthedUser = {
 export const validateUser = createAsyncThunk(
   "auth/validate",
   async ({ id, password }: ValidatingUser, { getState }) => {
-    // TODO(khanhdq): write a method to get user by id
-    const users = await getUsers()
-    if (!Object.hasOwn(users, id) || users[id].password !== password) {
+    const user = await getUser(id)
+    if (!user || user.password !== password) {
       throw new Error("Invalid user or password")
     }
-    return users[id]
+    return user
   },
 )
 
