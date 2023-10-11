@@ -1,4 +1,5 @@
 import { Box, Stack, Typography } from "@mui/material"
+import logo from "../login-logo.jpg"
 
 const AuthBasePage = (props: { children: React.ReactNode }) => {
   return (
@@ -13,11 +14,7 @@ const AuthBasePage = (props: { children: React.ReactNode }) => {
           Employee Polls
         </Typography>
 
-        <img
-          src="login-logo.jpg"
-          alt="login logo"
-          style={{ borderRadius: "100%" }}
-        />
+        <img src={logo} alt="login logo" style={{ borderRadius: "100%" }} />
 
         {props.children}
       </Stack>
