@@ -13,6 +13,13 @@ const LoginForm = () => {
   const [id, setId] = useState("")
   const [password, setPassword] = useState("")
 
+  const loading = auth.status === "loading"
+
+  const buttonEnabled = Boolean(!loading && id && password)
+
+  const errorMessage =
+    auth.status === "failed" ? "Incorrect Employee ID or Password" : ""
+
   const handleUserId = (e: React.ChangeEvent<HTMLInputElement>) => {
     setId(e.target.value)
   }
@@ -27,27 +34,29 @@ const LoginForm = () => {
   return (
     <>
       <TextField
-        id="user-id"
         value={id}
         onChange={handleUserId}
         label="Employee ID"
-        data-testid="login-form-input-id"
+        disabled={loading}
       />
 
-      <PasswordInput password={password} setPassword={setPassword} />
+      <PasswordInput
+        password={password}
+        setPassword={setPassword}
+        disabled={loading}
+      />
 
       <Button
         variant="contained"
         onClick={handleLogin}
-        disabled={!id || !password || auth.status === "loading"}
-        data-testid="login-form-login-button"
+        disabled={!buttonEnabled}
       >
-        {auth.status === "loading" ? <CircularProgress /> : "Log In"}
+        {loading ? <CircularProgress data-testid="login-loading" /> : "Log In"}
       </Button>
 
-      {auth.status === "failed" && (
+      {errorMessage && (
         <Typography fontSize={13} color="red">
-          Incorrect Employee ID or Password
+          {errorMessage}
         </Typography>
       )}
     </>

@@ -67,6 +67,27 @@ describe("Test login form", () => {
       })
       expect(button).toBeEnabled()
     })
+  })
+
+  describe("Login", () => {
+    it("Loading should disable form and button", async () => {
+      const { user } = renderDefault({ route: "/login" })
+
+      const inputEle = screen.getByLabelText("Employee ID")
+      const passwordEle = screen.getByLabelText("Password")
+      const button = screen.getByRole("button", { name: "Log In" })
+
+      await act(async () => {
+        await user.type(inputEle, employee.id)
+        await user.type(passwordEle, employee.password)
+        await user.click(button)
+      })
+
+      expect(screen.getByTestId("login-loading")).toBeInTheDocument()
+      expect(inputEle).toBeDisabled()
+      expect(passwordEle).toBeDisabled()
+      expect(button).toBeDisabled()
+    })
 
     it("Navigate to '/' if user existed", async () => {
       const { user } = renderDefault({ route: "/login" })
