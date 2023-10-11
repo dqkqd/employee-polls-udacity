@@ -156,30 +156,30 @@ describe("Test signup page", () => {
       })
       expect(screen.getByRole("button", { name: "Sign up" })).toBeDisabled()
     })
-  })
 
-  it("Should be disabled when password mismatch", async () => {
-    const { user } = renderDefault({ route: "/signup" })
-    expect(screen.getByRole("button", { name: "Sign up" })).toBeDisabled()
+    it("Should be disabled when password mismatch", async () => {
+      const { user } = renderDefault({ route: "/signup" })
+      expect(screen.getByRole("button", { name: "Sign up" })).toBeDisabled()
 
-    const inputEle = screen.getByLabelText("Employee ID")
-    const nameEle = screen.getByLabelText("Name")
-    const passwordEle = screen.getByLabelText("Password")
-    const repeatPasswordEle = screen.getByLabelText("Re-enter password")
+      const inputEle = screen.getByLabelText("Employee ID")
+      const nameEle = screen.getByLabelText("Name")
+      const passwordEle = screen.getByLabelText("Password")
+      const repeatPasswordEle = screen.getByLabelText("Re-enter password")
 
-    await act(async () => {
-      await user.type(inputEle, "123")
-      await user.type(nameEle, "123")
-      await user.type(passwordEle, "password123")
-      await user.type(repeatPasswordEle, "password")
+      await act(async () => {
+        await user.type(inputEle, "123")
+        await user.type(nameEle, "123")
+        await user.type(passwordEle, "password123")
+        await user.type(repeatPasswordEle, "password")
+      })
+      expect(screen.getByRole("button", { name: "Sign up" })).toBeDisabled()
+
+      await act(async () => {
+        await user.clear(repeatPasswordEle)
+        await user.type(repeatPasswordEle, "password123")
+      })
+      expect(screen.getByRole("button", { name: "Sign up" })).toBeEnabled()
     })
-    expect(screen.getByRole("button", { name: "Sign up" })).toBeDisabled()
-
-    await act(async () => {
-      await user.clear(repeatPasswordEle)
-      await user.type(repeatPasswordEle, "password123")
-    })
-    expect(screen.getByRole("button", { name: "Sign up" })).toBeEnabled()
   })
 
   describe("Signup", () => {
