@@ -1,11 +1,10 @@
 import { act, screen } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
-import { renderWithProviders } from "../../utils/test-utils"
-import LoginForm from "./LoginForm"
+import { renderDefault } from "../../utils/test-utils"
 
 describe("Test login form", () => {
   it("Render", () => {
-    renderWithProviders(<LoginForm />)
+    renderDefault({ route: "/login" })
 
     expect(screen.getByLabelText("Employee ID")).toBeInTheDocument()
     expect(screen.getByLabelText("Password")).toBeInTheDocument()
@@ -14,7 +13,7 @@ describe("Test login form", () => {
 
   describe("Input", () => {
     it("Write to form should change text", async () => {
-      const { user } = renderWithProviders(<LoginForm />)
+      const { user } = renderDefault({ route: "/login" })
 
       const inputId = screen.getByLabelText("Employee ID")
       expect(inputId).toHaveDisplayValue("")
@@ -34,7 +33,7 @@ describe("Test login form", () => {
 
   describe("Button", () => {
     it("Button is disabled until inputs are not empty", async () => {
-      const { user } = renderWithProviders(<LoginForm />)
+      const { user } = renderDefault({ route: "/login" })
 
       expect(screen.getByRole("button", { name: "Log In" })).toBeDisabled()
 
@@ -52,7 +51,7 @@ describe("Test login form", () => {
     })
 
     it("Navigate to '/' if user existed", async () => {
-      const { user } = renderWithProviders(<LoginForm />)
+      const { user } = renderDefault({ route: "/login" })
 
       const inputId = screen.getByLabelText("Employee ID")
       await act(async () => {
@@ -83,7 +82,7 @@ describe("Test login form", () => {
     ])(
       "Show error message when wrong username or password",
       async ({ id, password }) => {
-        const { user } = renderWithProviders(<LoginForm />)
+        const { user } = renderDefault({ route: "/login" })
 
         const idEle = screen.getByLabelText("Employee ID")
         await act(async () => {
