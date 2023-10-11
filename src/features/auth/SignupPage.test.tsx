@@ -3,10 +3,13 @@ import { describe, expect, it } from "vitest"
 import { getUsers } from "../../api"
 import { renderDefault } from "../../utils/test-utils"
 
-describe("Test signup form", () => {
+describe("Test signup page", () => {
   it("Render", () => {
     renderDefault({ route: "/signup" })
 
+    expect(screen.getByLabelText("sign-up-page-title")).toHaveTextContent(
+      "Sign Up",
+    )
     expect(screen.getByLabelText("Employee ID")).toBeInTheDocument()
     expect(screen.getByLabelText("Name")).toBeInTheDocument()
     expect(screen.getByLabelText("Avatar URL")).toBeInTheDocument()

@@ -5,7 +5,12 @@ import SignupForm from "./SignupForm"
 const SignupPage = () => {
   return (
     <BaseAuthPage>
-      <Typography variant="h5" mt={2} fontWeight="bolder">
+      <Typography
+        variant="h5"
+        mt={2}
+        fontWeight="bolder"
+        aria-label="sign-up-page-title"
+      >
         Sign Up
       </Typography>
       <SignupForm />
