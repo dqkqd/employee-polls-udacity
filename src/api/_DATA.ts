@@ -13,7 +13,7 @@ let users: UsersDictionary = {
     id: "sarahedo",
     password: "password123",
     name: "Sarah Edo",
-    avatarURL: null,
+    avatarURL: "https://placekitten.com/200/138",
     answers: {
       "8xf0y6ziyjabvozdd253nd": "optionOne",
       "6ni6ok3ym7mf1p33lnez": "optionOne",
@@ -26,7 +26,7 @@ let users: UsersDictionary = {
     id: "tylermcginnis",
     password: "abc321",
     name: "Tyler McGinnis",
-    avatarURL: null,
+    avatarURL: "https://placekitten.com/200/139",
     answers: {
       vthrdm985a262al8qx3do: "optionOne",
       xj352vofupe1dqz9emx13r: "optionTwo",
@@ -37,7 +37,7 @@ let users: UsersDictionary = {
     id: "mtsamis",
     password: "xyz123",
     name: "Mike Tsamis",
-    avatarURL: null,
+    avatarURL: "https://placekitten.com/200/142",
     answers: {
       xj352vofupe1dqz9emx13r: "optionOne",
       vthrdm985a262al8qx3do: "optionTwo",
@@ -49,7 +49,7 @@ let users: UsersDictionary = {
     id: "zoshikanlu",
     password: "pass246",
     name: "Zenobia Oshikanlu",
-    avatarURL: null,
+    avatarURL: "https://placekitten.com/200/143",
     answers: {
       xj352vofupe1dqz9emx13r: "optionOne",
     },
