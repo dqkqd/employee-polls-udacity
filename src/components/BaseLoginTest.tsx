@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react"
-import BaseAuthPage from "./BaseAuthPage"
+import BaseAuthPage from "./BaseLogin"
 
 describe("Test Base Auth Page", () => {
   it("Render", () => {

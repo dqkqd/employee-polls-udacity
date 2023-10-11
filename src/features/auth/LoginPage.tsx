@@ -1,10 +1,10 @@
 import { Typography } from "@mui/material"
-import BaseAuthPage from "./BaseAuthPage"
+import BaseLogin from "../../components/BaseLogin"
 import LoginForm from "./LoginForm"
 
 const LoginPage = () => {
   return (
-    <BaseAuthPage>
+    <BaseLogin>
       <Typography
         variant="h5"
         mt={2}
@@ -14,7 +14,7 @@ const LoginPage = () => {
         Log In
       </Typography>
       <LoginForm />
-    </BaseAuthPage>
+    </BaseLogin>
   )
 }
 
