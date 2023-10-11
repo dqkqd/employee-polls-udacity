@@ -5,7 +5,7 @@ const AuthBasePage = (props: { children: React.ReactNode }) => {
   return (
     <Box justifyContent="center" display="flex" mt={2}>
       <Stack
-        sx={{ width: "400px" }}
+        sx={{ width: "500px" }}
         spacing={3}
         component="form"
         style={{ textAlign: "center" }}
@@ -14,7 +14,16 @@ const AuthBasePage = (props: { children: React.ReactNode }) => {
           Employee Polls
         </Typography>
 
-        <img src={logo} alt="login logo" style={{ borderRadius: "100%" }} />
+        <img
+          src={logo}
+          alt="login logo"
+          style={{
+            borderRadius: "100%",
+            height: 300,
+            width: 300,
+            margin: "auto",
+          }}
+        />
 
         {props.children}
       </Stack>
