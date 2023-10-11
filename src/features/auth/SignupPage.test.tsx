@@ -219,8 +219,15 @@ describe("Test signup page", () => {
         expect(screen.getByText(`Hello ${newUser.name}`)).toBeInTheDocument()
       })
 
-      const { auth } = store.getState()
+      const { auth, users } = store.getState()
+
+      // auth should be registered
       expect(auth).toMatchObject(newUser)
+
+      // user should be added to store
+      // eslint-disable-next-line jest/valid-expect
+      expect(users.ids).to.be.includes(newUser.id)
+      expect(users.entities[newUser.id]).toMatchObject(newUser)
     })
 
     it("Cannot signup when user id existed", async () => {
