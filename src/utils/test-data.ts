@@ -1,4 +1,5 @@
 import { saveUser } from "../api"
+import { AuthedUser } from "../interfaces"
 
 export const initialUsers = {
   ids: ["@fake-user-1", "@fake-user-2"],
@@ -20,6 +21,14 @@ export const initialUsers = {
       answers: {},
     },
   },
+}
+
+export const initialAuth: AuthedUser = {
+  id: "@fake-user-1",
+  name: "Fake User 1",
+  password: "@fake-user-1-password",
+  avatarURL: "https://picsum.photos/200",
+  status: "success",
 }
 
 export const setUpTestUsers = async (users = initialUsers) => {
