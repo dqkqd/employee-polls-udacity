@@ -19,6 +19,7 @@ interface RegisteringUser {
 const initialState: AuthedUser = {
   id: null,
   name: null,
+  avatarURL: null,
   password: null,
   status: "idle",
 }
@@ -52,8 +53,8 @@ const authSlice = createSlice({
         state.status = "loading"
       })
       .addCase(validateUser.fulfilled, (state, action) => {
-        const { id, name, password } = action.payload
-        return { id, name, password, status: "success" }
+        const { id, name, password, avatarURL } = action.payload
+        return { id, name, password, avatarURL, status: "success" }
       })
       .addCase(validateUser.rejected, (state) => {
         state.status = "failed"
@@ -62,8 +63,8 @@ const authSlice = createSlice({
         state.status = "loading"
       })
       .addCase(signupUser.fulfilled, (state, action) => {
-        const { id, name, password } = action.payload
-        return { id, name, password, status: "success" }
+        const { id, name, password, avatarURL } = action.payload
+        return { id, name, password, avatarURL, status: "success" }
       })
       .addCase(signupUser.rejected, (state) => {
         state.status = "failed"

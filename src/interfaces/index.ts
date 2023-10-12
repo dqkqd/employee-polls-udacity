@@ -40,6 +40,7 @@ export interface UsersDictionary {
 export interface AuthedUser {
   id: string | null
   name: string | null
+  avatarURL: string | null
   password: string | null
   status: "idle" | "success" | "loading" | "failed"
 }
