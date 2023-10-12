@@ -19,3 +19,23 @@ describe("Authorization", () => {
     expect(screen.getByText(`Hello ${initialAuth.name}`)).toBeInTheDocument()
   })
 })
+
+describe("Test navbar", () => {
+  it.only("Render", () => {
+    renderDefault({
+      preloadedState: { users: initialUsers, auth: initialAuth },
+      route: "/",
+    })
+
+    expect(screen.getByRole("tab", { name: "HOME" })).toBeInTheDocument()
+    expect(screen.getByRole("tab", { name: "LEADERBOARD" })).toBeInTheDocument()
+    expect(
+      screen.getByRole("tab", { name: "NEW QUESTION" }),
+    ).toBeInTheDocument()
+
+    expect(screen.getByLabelText("user-nav-icon")).toHaveTextContent(
+      initialAuth.name as string,
+    )
+    expect(screen.getByRole("button", { name: "Log out" })).toBeInTheDocument()
+  })
+})

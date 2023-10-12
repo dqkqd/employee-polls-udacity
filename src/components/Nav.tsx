@@ -53,9 +53,9 @@ const Nav = () => {
               marginY: 1,
               marginX: 5,
             }}
+            aria-label="user-nav-icon"
           >
             <Avatar sx={{ width: 40, height: 40 }} src={auth.avatarURL ?? ""} />
-
             <Typography variant="h5" mx={1} fontWeight="bold">
               {auth.name}
             </Typography>
