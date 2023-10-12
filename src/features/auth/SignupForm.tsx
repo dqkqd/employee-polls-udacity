@@ -49,7 +49,7 @@ const SignupForm = () => {
     dispatch(signupUser({ id, name, password, avatarURL: avatar })).then(
       (e) => {
         if (e.meta.requestStatus === "fulfilled") {
-          navigate("/")
+          navigate("/home")
         }
       },
     )

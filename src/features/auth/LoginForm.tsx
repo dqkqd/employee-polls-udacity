@@ -27,7 +27,7 @@ const LoginForm = () => {
   const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     dispatch(validateUser({ id, password })).then(() => {
-      navigate("/")
+      navigate("/home")
     })
   }
 

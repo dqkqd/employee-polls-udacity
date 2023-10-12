@@ -20,7 +20,7 @@ const UserLoginCard = (props: { id: EntityId }) => {
     e.preventDefault()
     dispatch(validateUser({ id: user.id, password: user.password })).then(
       () => {
-        navigate("/")
+        navigate("/home")
       },
     )
   }
