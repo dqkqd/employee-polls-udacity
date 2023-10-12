@@ -6,12 +6,14 @@ import {
   type ThunkAction,
 } from "@reduxjs/toolkit"
 import authReducer from "../features/auth/authSlice"
+import questionsReducer from "../features/questions/questionsSlice"
 import usersReducer from "../features/users/usersSlice"
 
 // Create the root reducer independently to obtain the RootState type
 const rootReducer = combineReducers({
   auth: authReducer,
   users: usersReducer,
+  questions: questionsReducer,
 })
 
 export function setupStore(preloadedState?: PreloadedState<RootState>) {
@@ -19,6 +21,7 @@ export function setupStore(preloadedState?: PreloadedState<RootState>) {
     reducer: {
       auth: authReducer,
       users: usersReducer,
+      questions: questionsReducer,
     },
     preloadedState,
   })
@@ -27,6 +30,7 @@ export const store = configureStore({
   reducer: {
     auth: authReducer,
     users: usersReducer,
+    questions: questionsReducer,
   },
 })
 

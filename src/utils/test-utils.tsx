@@ -7,6 +7,7 @@ import { Provider } from "react-redux"
 import { createMemoryRouter, RouterProvider } from "react-router-dom"
 import type { AppStore, RootState } from "../app/store"
 import authSlice from "../features/auth/authSlice"
+import questionReducer from "../features/questions/questionsSlice"
 import usersSlice from "../features/users/usersSlice"
 import { routesConfig } from "../routes"
 import { initialUsers } from "./test-data"
@@ -31,6 +32,7 @@ export function renderWithProviders(
       reducer: {
         auth: authSlice,
         users: usersSlice,
+        questions: questionReducer,
       },
       preloadedState,
     }),
@@ -68,6 +70,7 @@ export function renderDefault({
     reducer: {
       auth: authSlice,
       users: usersSlice,
+      questions: questionReducer,
     },
     preloadedState,
   }),
