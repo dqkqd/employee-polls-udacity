@@ -9,12 +9,21 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material"
+import { useState } from "react"
 import { Link } from "react-router-dom"
 import { useAppDispatch, useAuth } from "../app/hook"
 import { logoutUser } from "../features/auth/authSlice"
 
 const Nav = () => {
   const dispatch = useAppDispatch()
+
+  const [tabValue, setTabValue] = useState("home")
+  const handleTabValueChange = (
+    event: React.SyntheticEvent,
+    newTabValue: string,
+  ) => {
+    setTabValue(newTabValue)
+  }
 
   const auth = useAuth()
   const handleLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -32,7 +41,7 @@ const Nav = () => {
               display: { xs: "none", md: "flex" },
             }}
           >
-            <Tabs value={"home"}>
+            <Tabs value={tabValue} onChange={handleTabValueChange}>
               <Tab label="HOME" value="home" to="/home" component={Link} />
               <Tab
                 label="LEADERBOARD"
@@ -42,7 +51,7 @@ const Nav = () => {
               />
               <Tab
                 label="NEW QUESTION"
-                value="new"
+                value="new-question"
                 to="/new-question"
                 component={Link}
               />
