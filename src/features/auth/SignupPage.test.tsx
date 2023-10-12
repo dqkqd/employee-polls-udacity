@@ -1,6 +1,7 @@
 import { act, screen, waitFor } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
 import { getUsers } from "../../api"
+import { UsersDictionary } from "../../interfaces"
 import { renderDefault } from "../../utils/test-utils"
 
 describe("Test signup page", () => {
@@ -230,7 +231,10 @@ describe("Test signup page", () => {
       expect(users.entities[newUser.id]).toMatchObject(newUser)
 
       // user should existed in database as well
-      const usersFromDatabase = await getUsers()
+      let usersFromDatabase: UsersDictionary = {}
+      await act(async () => {
+        usersFromDatabase = await getUsers()
+      })
       expect(usersFromDatabase[newUser.id]).toMatchObject(newUser)
     })
 
