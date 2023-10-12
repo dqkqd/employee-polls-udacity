@@ -10,10 +10,17 @@ import {
   Typography,
 } from "@mui/material"
 import { Link } from "react-router-dom"
-import { useAuth } from "../app/hook"
+import { useAppDispatch, useAuth } from "../app/hook"
+import { logoutUser } from "../features/auth/authSlice"
 
 const Nav = () => {
+  const dispatch = useAppDispatch()
+
   const auth = useAuth()
+  const handleLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    dispatch(logoutUser())
+  }
 
   return (
     <AppBar position="static" color="default">
@@ -69,6 +76,7 @@ const Nav = () => {
               fontWeight: "bolder",
             }}
             variant="contained"
+            onClick={handleLogout}
           >
             Log out
           </Button>

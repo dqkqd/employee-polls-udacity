@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react"
+import { act, screen, waitFor } from "@testing-library/react"
 import { it } from "vitest"
 import { initialAuth, initialUsers } from "../utils/test-data"
 import { renderDefault } from "../utils/test-utils"
@@ -21,7 +21,7 @@ describe("Authorization", () => {
 })
 
 describe("Test navbar", () => {
-  it.only("Render", () => {
+  it("Render", () => {
     renderDefault({
       preloadedState: { users: initialUsers, auth: initialAuth },
       route: "/",
@@ -37,5 +37,22 @@ describe("Test navbar", () => {
       initialAuth.name as string,
     )
     expect(screen.getByRole("button", { name: "Log out" })).toBeInTheDocument()
+  })
+
+  it.only("Should logout user and move to login page when click logout button", async () => {
+    const { user } = renderDefault({
+      preloadedState: { users: initialUsers, auth: initialAuth },
+      route: "/",
+    })
+
+    await act(async () => {
+      user.click(screen.getByRole("button", { name: "Log out" }))
+    })
+
+    await waitFor(() => {
+      expect(screen.getByLabelText("log-in-page-title")).toHaveTextContent(
+        "Log In",
+      )
+    })
   })
 })
