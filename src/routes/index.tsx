@@ -1,16 +1,27 @@
+import Dashboard from "../components/Dashboard"
 import Home from "../components/Home"
-import ProtectedRoutes from "../components/ProtectedRoutes"
+import Leaderboard from "../components/Leaderboard"
+import NewQuestion from "../components/NewQuestion"
 import LoginPage from "../features/auth/LoginPage"
 import SignupPage from "../features/auth/SignupPage"
 import UserLoginSelection from "../features/users/UserLoginSelection"
 
 export const routesConfig = [
   {
-    element: <ProtectedRoutes />,
+    path: "/",
+    element: <Dashboard />,
     children: [
       {
-        path: "/",
+        path: "home",
         element: <Home />,
+      },
+      {
+        path: "leaderboard",
+        element: <Leaderboard />,
+      },
+      {
+        path: "new-question",
+        element: <NewQuestion />,
       },
     ],
   },
