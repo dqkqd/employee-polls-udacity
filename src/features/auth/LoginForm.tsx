@@ -47,6 +47,7 @@ const LoginForm = () => {
       />
 
       <Button
+        type="submit"
         variant="contained"
         onClick={handleLogin}
         disabled={!buttonEnabled}
