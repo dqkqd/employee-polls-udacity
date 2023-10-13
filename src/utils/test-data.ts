@@ -1,6 +1,6 @@
-import { EntityState } from "@reduxjs/toolkit"
-import { saveUser } from "../api"
-import { AuthedUser } from "../interfaces"
+import { EntityId, EntityState } from "@reduxjs/toolkit"
+import { saveQuestion, saveUser } from "../api"
+import { AuthedUser, Question, User } from "../interfaces"
 
 export const initialUsers: EntityState<User> = {
   ids: ["@fake-user-1", "@fake-user-2"],
@@ -24,6 +24,19 @@ export const initialUsers: EntityState<User> = {
   },
 }
 
+const fakeQuestions = [
+  {
+    optionOneText: "fake-question-1-option-one",
+    optionTwoText: "fake-question-1-option-two",
+    author: initialUsers.ids[0] as string,
+  },
+  {
+    optionOneText: "fake-question-2-option-one",
+    optionTwoText: "fake-question-2-option-two",
+    author: initialUsers.ids[1] as string,
+  },
+]
+
 export const initialAuth: AuthedUser = {
   id: "@fake-user-1",
   name: "Fake User 1",
@@ -39,4 +52,18 @@ export const setUpTestUsers = async (users = initialUsers) => {
       await saveUser(registerUser)
     }
   }
+}
+
+export const setUpTestQuestions = async (
+  questions = fakeQuestions,
+): Promise<EntityState<Question>> => {
+  return Promise.all(
+    questions.map(async (question) => await saveQuestion(question)),
+  ).then((formattedQuestions) => {
+    const ids = formattedQuestions.map((q) => q.id as EntityId)
+    const entities = Object.fromEntries(
+      formattedQuestions.map((q) => [q.id as EntityId, q]),
+    )
+    return { ids, entities }
+  })
 }
