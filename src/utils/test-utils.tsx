@@ -2,9 +2,13 @@ import type { PreloadedState } from "@reduxjs/toolkit"
 import { configureStore } from "@reduxjs/toolkit"
 import { render, type RenderOptions } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import React from "react"
+import React, { PropsWithChildren } from "react"
 import { Provider } from "react-redux"
-import { createMemoryRouter, RouterProvider } from "react-router-dom"
+import {
+  createMemoryRouter,
+  MemoryRouter,
+  RouterProvider,
+} from "react-router-dom"
 import type { AppStore, RootState } from "../app/store"
 import authSlice from "../features/auth/authSlice"
 import questionReducer from "../features/questions/questionsSlice"
@@ -86,4 +90,38 @@ export function renderDefault({
     router,
     ...renderOptions,
   })
+}
+
+export function renderWithNoRoutes(
+  ui: React.ReactElement,
+  {
+    preloadedState = {
+      users: initialUsers,
+    },
+    // Automatically create a store instance if no store was passed in
+    store = configureStore({
+      reducer: {
+        auth: authSlice,
+        users: usersSlice,
+        questions: questionReducer,
+      },
+      preloadedState,
+    }),
+    ...renderOptions
+  }: ExtendedRenderOptions = {},
+) {
+  function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
+    return (
+      <Provider store={store}>
+        <MemoryRouter>{children}</MemoryRouter>
+      </Provider>
+    )
+  }
+
+  // Return an object with the store and all of RTL's query functions
+  return {
+    store,
+    user: userEvent.setup(),
+    ...render(ui, { wrapper: Wrapper, ...renderOptions }),
+  }
 }
