@@ -14,7 +14,7 @@ import authSlice from "../features/auth/authSlice"
 import questionReducer from "../features/questions/questionsSlice"
 import usersSlice from "../features/users/usersSlice"
 import { routesConfig } from "../routes"
-import { initialUsers } from "./test-data"
+import { initialQuestions, initialUsers } from "./test-data"
 
 // As a basic setup, import your same slice reducers
 interface ExtendedRenderOptions extends Omit<RenderOptions, "queries"> {
@@ -30,6 +30,7 @@ export function renderWithProviders(
     route = "/",
     preloadedState = {
       users: initialUsers,
+      questions: initialQuestions,
     },
     // Automatically create a store instance if no store was passed in
     store = configureStore({
@@ -68,6 +69,7 @@ export function renderDefault({
   route = "/",
   preloadedState = {
     users: initialUsers,
+    questions: initialQuestions,
   },
   // Automatically create a store instance if no store was passed in
   store = configureStore({
@@ -97,6 +99,7 @@ export function renderWithNoRoutes(
   {
     preloadedState = {
       users: initialUsers,
+      questions: initialQuestions,
     },
     // Automatically create a store instance if no store was passed in
     store = configureStore({
