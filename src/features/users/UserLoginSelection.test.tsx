@@ -1,11 +1,9 @@
 import { act, screen, waitFor } from "@testing-library/react"
 import { expect, it } from "vitest"
-import { initialUsers, setUpTestUsers } from "../../utils/test-data"
+import { initialUsers } from "../../utils/test-data"
 import { renderDefault } from "../../utils/test-utils"
 
 it("Test login by selecting user", async () => {
-  setUpTestUsers(initialUsers)
-
   const { user } = renderDefault({ route: "/login/users" })
 
   expect(screen.getByText("Select employee to login")).toBeInTheDocument()
