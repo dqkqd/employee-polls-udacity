@@ -4,6 +4,7 @@ import Leaderboard from "../components/Leaderboard"
 import NewQuestion from "../components/NewQuestion"
 import LoginPage from "../features/auth/LoginPage"
 import SignupPage from "../features/auth/SignupPage"
+import QuestionDetail from "../features/questions/QuestionDetail"
 import UserLoginSelection from "../features/users/UserLoginSelection"
 
 export const routesConfig = [
@@ -22,6 +23,11 @@ export const routesConfig = [
       {
         path: "new-question",
         element: <NewQuestion />,
+      },
+
+      {
+        path: "questions/:id",
+        element: <QuestionDetail />,
       },
     ],
   },
