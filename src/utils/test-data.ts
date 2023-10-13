@@ -1,7 +1,8 @@
+import { EntityState } from "@reduxjs/toolkit"
 import { saveUser } from "../api"
 import { AuthedUser } from "../interfaces"
 
-export const initialUsers = {
+export const initialUsers: EntityState<User> = {
   ids: ["@fake-user-1", "@fake-user-2"],
   entities: {
     "@fake-user-1": {
@@ -33,6 +34,9 @@ export const initialAuth: AuthedUser = {
 
 export const setUpTestUsers = async (users = initialUsers) => {
   for (const user of Object.values(users.entities)) {
-    await saveUser(user)
+    if (user) {
+      const registerUser = { ...user, avatarURL: user.avatarURL ?? undefined }
+      await saveUser(registerUser)
+    }
   }
 }
