@@ -76,13 +76,14 @@ const setupTestData = async () => {
     throw new Error("Some questions answer are not added")
   }
 
-  const allUsers = await getUsers()
+  const [allUsers, allQuestions] = await Promise.all([
+    getUsers(),
+    getQuestions(),
+  ])
   const initialUsers: EntityState<User> = {
     ids: Object.keys(allUsers),
     entities: allUsers,
   }
-
-  const allQuestions = await getQuestions()
   const initialQuestions: EntityState<Question> = {
     ids: Object.keys(allUsers),
     entities: allQuestions,

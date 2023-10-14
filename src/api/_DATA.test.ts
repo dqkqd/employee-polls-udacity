@@ -1,4 +1,4 @@
-import type { AnswerId } from "./../interfaces/index"
+import type { AnswerId, Question, User } from "./../interfaces/index"
 import {
   _getQuestions,
   _getUser,
@@ -10,22 +10,32 @@ import {
 
 import { describe, expect, it } from "vitest"
 
-describe("Test save questions", () => {
-  let author: string
-  beforeAll(async () => {
-    const users = await _getUsers()
-    author = Object.values(users)[0].id
-  })
+let userInDb: User
+let questionInDb: Question
+let randomUserId: string
+let randomQuestionId: string
 
+beforeAll(async () => {
+  const [users, questions] = await Promise.all([_getUsers(), _getQuestions()])
+  userInDb = Object.values(users)[0]
+  questionInDb = Object.values(questions)[0]
+})
+
+beforeEach(() => {
+  randomUserId = crypto.randomUUID()
+  randomQuestionId = crypto.randomUUID()
+})
+
+describe("Test save questions", () => {
   it("success", async () => {
     const question = await _saveQuestion({
       optionOneText: "option1",
       optionTwoText: "option2",
-      author,
+      author: userInDb.id,
     })
 
     expect(question).toMatchObject({
-      author,
+      author: userInDb.id,
       optionOne: { votes: [], text: "option1" },
       optionTwo: { votes: [], text: "option2" },
     })
@@ -35,13 +45,14 @@ describe("Test save questions", () => {
 
   describe("failed", () => {
     it("author must be existed to add question", async () => {
+      const userId = crypto.randomUUID()
       await expect(
         _saveQuestion({
           optionOneText: "option1",
           optionTwoText: "option2",
-          author: "123",
+          author: userId,
         }),
-      ).rejects.toBe("User id '123' does not exist")
+      ).rejects.toBe(`User id '${userId}' does not exist`)
     })
 
     describe("empty, null or undefined arguments should be rejected", () => {
@@ -76,7 +87,7 @@ describe("Test save questions", () => {
         _saveQuestion({
           optionOneText: "abc",
           optionTwoText: "abc",
-          author,
+          author: userInDb.id,
         }),
       ).rejects.toEqual("Options must be different")
     })
@@ -85,26 +96,26 @@ describe("Test save questions", () => {
 
 describe("Test get user", () => {
   it("success", async () => {
-    const users = await _getUsers()
-    const user = Object.values(users)[0]
-    await expect(_getUser(user.id)).resolves.toStrictEqual(user)
+    await expect(_getUser(userInDb.id)).resolves.toStrictEqual(userInDb)
   })
+
   it("User does not exist", async () => {
-    await expect(_getUser("123")).rejects.toBe("User id '123' does not exist")
+    await expect(_getUser(randomUserId)).rejects.toBe(
+      `User id '${randomUserId}' does not exist`,
+    )
   })
 })
 
 describe("Test save user", () => {
   it("success", async () => {
     const user = await _saveUser({
-      id: "123",
+      id: randomUserId,
       name: "abc",
       password: "pw123",
       avatarURL: "https://picsum.photos/200",
     })
 
-    const users = await _getUsers()
-    expect(users[user.id]).toMatchObject(user)
+    await expect(_getUser(user.id)).resolves.toStrictEqual(user)
   })
 
   describe("failed", () => {
@@ -124,20 +135,27 @@ describe("Test save user", () => {
     })
 
     it("User already existed", async () => {
-      const users = await _getUsers()
-      const userId = Object.values(users)[0].id
-
       await expect(
-        _saveUser({ id: userId, name: "abc", password: "pw123" }),
+        _saveUser({ id: userInDb.id, name: "abc", password: "pw123" }),
       ).rejects.toBe("User already existed")
     })
   })
 })
 
+describe("Test save question's answers", () => {
   describe("success", () => {
     test.each(["optionOne", "optionTwo"])(
       "answerId is '%s'",
       async (answerId) => {
+        const newUser = await _saveUser({
+          id: crypto.randomUUID(),
+          password: "123",
+          name: "123",
+        })
+
+        const userId = newUser.id
+        const questionId = Object.values(await _getQuestions())[0].id
+
         await expect(
           _saveQuestionAnswer({
             authedUser: userId,
@@ -166,7 +184,7 @@ describe("Test save user", () => {
           await expect(
             _saveQuestionAnswer({
               authedUser,
-              qid: questionId,
+              qid: questionInDb.id,
               answerId: "optionOne",
             }),
           ).rejects.toEqual("Please provide authedUser, qid, and answer")
@@ -176,7 +194,7 @@ describe("Test save user", () => {
       test.each(["", null, undefined])("qid is '%s'", async (qid) => {
         await expect(
           _saveQuestionAnswer({
-            authedUser: userId,
+            authedUser: userInDb.id,
             qid,
             answerId: "optionOne",
           }),
@@ -186,8 +204,8 @@ describe("Test save user", () => {
       test.each(["", null, undefined])("answerId is '%s'", async (answerId) => {
         await expect(
           _saveQuestionAnswer({
-            authedUser: userId,
-            qid: questionId,
+            authedUser: userInDb.id,
+            qid: questionInDb.id,
             answerId: answerId as AnswerId,
           }),
         ).rejects.toEqual("Please provide authedUser, qid, and answer")
@@ -198,8 +216,8 @@ describe("Test save user", () => {
       it("answerId should be optionOne or optionTwo", async () => {
         await expect(
           _saveQuestionAnswer({
-            authedUser: userId,
-            qid: questionId,
+            authedUser: userInDb.id,
+            qid: questionInDb.id,
             answerId: "optionThree" as AnswerId,
           }),
         ).rejects.toBe(
@@ -210,21 +228,21 @@ describe("Test save user", () => {
       it("user should exist in database", async () => {
         await expect(
           _saveQuestionAnswer({
-            authedUser: "123",
-            qid: questionId,
+            authedUser: randomUserId,
+            qid: questionInDb.id,
             answerId: "optionOne",
           }),
-        ).rejects.toBe("User id '123' does not exist")
+        ).rejects.toBe(`User id '${randomUserId}' does not exist`)
       })
 
       it("question id should exist in database", async () => {
         await expect(
           _saveQuestionAnswer({
-            authedUser: userId,
-            qid: "123",
+            authedUser: userInDb.id,
+            qid: randomQuestionId,
             answerId: "optionOne",
           }),
-        ).rejects.toBe("Question id '123' does not exist")
+        ).rejects.toBe(`Question id '${randomQuestionId}' does not exist`)
       })
     })
   })
