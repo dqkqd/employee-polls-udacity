@@ -3,7 +3,6 @@ import { Button, Card, Stack, Typography } from "@mui/material"
 
 const QuestionDetailVotingOption = (props: {
   text: string
-  votes: string[]
   select: () => Promise<void>
   canVote?: boolean
 }) => {

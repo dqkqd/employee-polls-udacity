@@ -5,7 +5,6 @@ it("Render", async () => {
   render(
     <QuestionDetailVotingOption
       text="First option"
-      votes={[]}
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       select={() => new Promise<void>(() => {})}
     />,
@@ -18,7 +17,6 @@ it("Button enabled", async () => {
   render(
     <QuestionDetailVotingOption
       text="First option"
-      votes={[]}
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       select={() => new Promise<void>(() => {})}
       canVote={true}
@@ -31,7 +29,6 @@ it("Button disabled", async () => {
   render(
     <QuestionDetailVotingOption
       text="First option"
-      votes={[]}
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       select={() => new Promise<void>(() => {})}
       canVote={false}
