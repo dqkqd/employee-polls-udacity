@@ -5,11 +5,11 @@ const QuestionDetailOption = (props: {
   text: string
   votes: string[]
   select: () => Promise<void>
-  disabled?: boolean
+  canVote?: boolean
 }) => {
   return (
     <Stack alignItems="center" justifyContent="center" sx={{ width: "80%" }}>
-      <Card variant="outlined" sx={{ width: "80%" }}>
+      <Card sx={{ width: "80%" }} elevation={10}>
         <Typography
           align="center"
           display="flex"
@@ -32,7 +32,7 @@ const QuestionDetailOption = (props: {
           sx={{ borderRadius: 0, fontWeight: "bold", fontSize: 20 }}
           startIcon={<CheckCircleIcon />}
           onClick={props.select}
-          disabled={props.disabled}
+          disabled={!props.canVote}
         >
           Vote
         </Button>

@@ -56,6 +56,9 @@ const QuestionDetail = () => {
   >(votedAnswer !== null ? "succeeded" : "idle")
 
   const loading = votingStatus === "loading"
+  const canVote =
+    (votingStatus === "idle" || votingStatus === "failed") &&
+    votedAnswer === null
 
   const selectAnswer = (answerId: AnswerId) => {
     const pick = async () => {
@@ -109,7 +112,7 @@ const QuestionDetail = () => {
               <QuestionDetailOption
                 {...question.optionOne}
                 select={selectAnswer("optionOne")}
-                disabled={loading}
+                canVote={canVote}
               />
             </Box>
           </Grid>
@@ -118,7 +121,7 @@ const QuestionDetail = () => {
               <QuestionDetailOption
                 {...question.optionTwo}
                 select={selectAnswer("optionTwo")}
-                disabled={loading}
+                canVote={canVote}
               />
             </Box>
           </Grid>

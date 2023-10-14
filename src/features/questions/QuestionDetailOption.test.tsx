@@ -1,17 +1,41 @@
 import { render, screen } from "@testing-library/react"
 import QuestionDetailOption from "./QuestionDetailOption"
 
-describe("Test question detail option", () => {
-  it("render", async () => {
-    render(
-      <QuestionDetailOption
-        text="First option"
-        votes={[]}
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        select={() => new Promise<void>(() => {})}
-      />,
-    )
-    expect(screen.getByText("First option")).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: /vote/i })).toBeInTheDocument()
-  })
+it("Render", async () => {
+  render(
+    <QuestionDetailOption
+      text="First option"
+      votes={[]}
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      select={() => new Promise<void>(() => {})}
+    />,
+  )
+  expect(screen.getByText("First option")).toBeInTheDocument()
+  expect(screen.getByRole("button", { name: /vote/i })).toBeInTheDocument()
+})
+
+it("Button enabled", async () => {
+  render(
+    <QuestionDetailOption
+      text="First option"
+      votes={[]}
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      select={() => new Promise<void>(() => {})}
+      canVote={true}
+    />,
+  )
+  expect(screen.getByRole("button", { name: /vote/i })).toBeEnabled()
+})
+
+it("Button disabled", async () => {
+  render(
+    <QuestionDetailOption
+      text="First option"
+      votes={[]}
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      select={() => new Promise<void>(() => {})}
+      canVote={false}
+    />,
+  )
+  expect(screen.getByRole("button", { name: /vote/i })).toBeDisabled()
 })
