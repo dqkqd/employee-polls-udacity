@@ -8,7 +8,8 @@ import {
   initialQuestions,
   initialUsers,
 } from "../../utils/test-data"
-import { renderDefault } from "../../utils/test-utils"
+import { renderWithNoRoutes } from "../../utils/test-utils"
+import QuestionDetailVoting from "./QuestionDetailVoting"
 
 it("Test render", async () => {
   const question = Object.values(initialQuestions.entities)[0]
@@ -21,17 +22,21 @@ it("Test render", async () => {
     throw new UserNotFoundError(question.author)
   }
 
-  renderDefault({
-    route: `/questions/${question.id}`,
-    preloadedState: {
-      users: initialUsers,
-      questions: initialQuestions,
-      auth: initialAuth,
+  renderWithNoRoutes(
+    <QuestionDetailVoting
+      questionId={question.id}
+      optionOneText={question.optionOne.text}
+      optionTwoText={question.optionTwo.text}
+    />,
+    {
+      preloadedState: {
+        users: initialUsers,
+        questions: initialQuestions,
+        auth: initialAuth,
+      },
     },
-  })
+  )
 
-  expect(screen.getByText(`Poll by ${author.name}`)).toBeInTheDocument()
-  expect(screen.getByText("Would you rather")).toBeInTheDocument()
   expect(screen.getByText(question.optionOne.text)).toBeInTheDocument()
   expect(screen.getByText(question.optionTwo.text)).toBeInTheDocument()
   expect(screen.getAllByRole("button", { name: /vote/i })).toHaveLength(2)
@@ -47,14 +52,20 @@ test.each(["optionOne", "optionTwo"])(
 
     const auth = initialAuth
 
-    const { store, user } = renderDefault({
-      route: `/questions/${question.id}`,
-      preloadedState: {
-        users: initialUsers,
-        questions: initialQuestions,
-        auth,
+    const { store, user } = renderWithNoRoutes(
+      <QuestionDetailVoting
+        questionId={question.id}
+        optionOneText={question.optionOne.text}
+        optionTwoText={question.optionTwo.text}
+      />,
+      {
+        preloadedState: {
+          users: initialUsers,
+          questions: initialQuestions,
+          auth: initialAuth,
+        },
       },
-    })
+    )
 
     const buttons = screen.getAllByRole("button", { name: /vote/i })
     const button = answerId === "optionOne" ? buttons[0] : buttons[1]
@@ -98,16 +109,20 @@ it("Loading when voting new answer", async () => {
     throw new QuestionNotFoundError(question)
   }
 
-  const auth = initialAuth
-
-  const { user } = renderDefault({
-    route: `/questions/${question.id}`,
-    preloadedState: {
-      users: initialUsers,
-      questions: initialQuestions,
-      auth,
+  const { user } = renderWithNoRoutes(
+    <QuestionDetailVoting
+      questionId={question.id}
+      optionOneText={question.optionOne.text}
+      optionTwoText={question.optionTwo.text}
+    />,
+    {
+      preloadedState: {
+        users: initialUsers,
+        questions: initialQuestions,
+        auth: initialAuth,
+      },
     },
-  })
+  )
 
   const buttons = screen.getAllByRole("button", { name: /vote/i })
 
