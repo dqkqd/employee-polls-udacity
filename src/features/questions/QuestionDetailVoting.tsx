@@ -6,23 +6,18 @@ import {
   Typography,
 } from "@mui/material"
 import { useState } from "react"
-import { useAppDispatch, useAuth } from "../../app/hook"
-import { LoginRequiredError } from "../../errors"
-import { AnswerId, QuestionId } from "../../interfaces"
+import { useAppDispatch } from "../../app/hook"
+import { AnswerId, QuestionId, UserId } from "../../interfaces"
 import { pickAnswer } from "../common"
 import QuestionDetailVotingOption from "./QuestionDetailVotingOption"
 
 const QuestionDetailVoting = (props: {
   questionId: QuestionId
+  userId: UserId
   optionOneText: string
   optionTwoText: string
 }) => {
   const dispatch = useAppDispatch()
-
-  const { id: userId } = useAuth()
-  if (!userId) {
-    throw new LoginRequiredError()
-  }
 
   const [votingStatus, setVotingStatus] = useState<
     "idle" | "loading" | "succeeded" | "failed"
@@ -41,7 +36,7 @@ const QuestionDetailVoting = (props: {
       setVotingStatus("loading")
       const response = await dispatch(
         pickAnswer({
-          userId,
+          userId: props.userId,
           questionId: props.questionId,
           answerId,
         }),

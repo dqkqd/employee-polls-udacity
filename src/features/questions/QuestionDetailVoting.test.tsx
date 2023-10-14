@@ -1,7 +1,7 @@
 import { act, screen, waitFor } from "@testing-library/react"
 import { it } from "vitest"
 import { getQuestions, getUsers } from "../../api"
-import { QuestionNotFoundError, UserNotFoundError } from "../../errors"
+import { QuestionNotFoundError } from "../../errors"
 import { AnswerId, UserId } from "../../interfaces"
 import {
   addedQuestions,
@@ -19,14 +19,12 @@ it("Test render", async () => {
     throw new QuestionNotFoundError(question)
   }
 
-  const author = initialUsers.entities[question.author]
-  if (!author) {
-    throw new UserNotFoundError(question.author)
-  }
+  const auth = initialAuth
 
   renderWithNoRoutes(
     <QuestionDetailVoting
       questionId={question.id}
+      userId={auth.id as string}
       optionOneText={question.optionOne.text}
       optionTwoText={question.optionTwo.text}
     />,
@@ -71,6 +69,7 @@ test.each([
   const { store, user } = renderWithNoRoutes(
     <QuestionDetailVoting
       questionId={question.id}
+      userId={auth.id as string}
       optionOneText={question.optionOne.text}
       optionTwoText={question.optionTwo.text}
     />,
@@ -127,10 +126,12 @@ it("Loading when voting new answer", async () => {
   if (!question) {
     throw new QuestionNotFoundError(question)
   }
+  const auth = initialAuth
 
   const { user } = renderWithNoRoutes(
     <QuestionDetailVoting
       questionId={question.id}
+      userId={auth.id as string}
       optionOneText={question.optionOne.text}
       optionTwoText={question.optionTwo.text}
     />,
@@ -178,6 +179,7 @@ it("User can not vote the same question 2 times", async () => {
   const { user } = renderWithNoRoutes(
     <QuestionDetailVoting
       questionId={question.id}
+      userId={auth.id as string}
       optionOneText={question.optionOne.text}
       optionTwoText={question.optionTwo.text}
     />,
