@@ -7,6 +7,7 @@ import {
 } from "@reduxjs/toolkit"
 import { getUsers, saveUser } from "../../api"
 import type { RootState } from "../../app/store"
+import { UserNotFoundError } from "../../errors"
 import type {
   AnswerId,
   PublicUser,
@@ -53,7 +54,7 @@ const usersSlice = createSlice({
       const { userId, questionId, answerId } = action.payload
       const user = state.entities[userId]
       if (!user) {
-        throw new Error(`User ${userId} does not existed`)
+        throw new UserNotFoundError(userId)
       }
       user.answers[questionId] = answerId
       return state

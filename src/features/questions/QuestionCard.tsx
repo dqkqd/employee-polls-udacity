@@ -12,6 +12,7 @@ import DoubleArrowIcon from "@mui/icons-material/DoubleArrow"
 import { EntityId } from "@reduxjs/toolkit"
 import { useNavigate } from "react-router-dom"
 import { useAppSelector } from "../../app/hook"
+import { QuestionNotFoundError } from "../../errors"
 import { selectQuestionById } from "./questionsSlice"
 
 const QuestionCard = (props: { id: EntityId }) => {
@@ -21,7 +22,7 @@ const QuestionCard = (props: { id: EntityId }) => {
     selectQuestionById(state, props.id),
   )
   if (!question) {
-    throw new Error("Handle question undefined")
+    throw new QuestionNotFoundError(props.id)
   }
 
   const createdDate = new Date(question.timestamp).toUTCString()

@@ -1,4 +1,5 @@
 import { screen } from "@testing-library/react"
+import { QuestionNotFoundError } from "../../errors"
 import { initialQuestions } from "../../utils/test-data"
 import { renderWithNoRoutes } from "../../utils/test-utils"
 import QuestionCard from "./QuestionCard"
@@ -7,7 +8,7 @@ describe("Test question card", () => {
   it("render", async () => {
     const question = Object.values(initialQuestions.entities)[0]
     if (!question) {
-      throw new Error("question must be defined")
+      throw new QuestionNotFoundError(question)
     }
 
     renderWithNoRoutes(<QuestionCard id={question.id} />)

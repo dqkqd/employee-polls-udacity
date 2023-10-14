@@ -3,6 +3,11 @@ import { EntityId } from "@reduxjs/toolkit"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
 import { useAppDispatch, useAppSelector, useAuth } from "../../app/hook"
+import {
+  LoginRequiredError,
+  QuestionNotFoundError,
+  UserNotFoundError,
+} from "../../errors"
 import { AnswerId } from "../../interfaces"
 import { pickAnswer } from "../common"
 import { selectUserById } from "../users/usersSlice"
@@ -17,19 +22,19 @@ const QuestionDetail = () => {
     selectQuestionById(state, id as EntityId),
   )
   if (!question) {
-    throw new Error(`question ${id} does not exist`)
+    throw new QuestionNotFoundError(id)
   }
 
   const author = useAppSelector((state) =>
     selectUserById(state, question.author),
   )
   if (!author) {
-    throw new Error(`user ${question.author} does not exist`)
+    throw new UserNotFoundError(question.author)
   }
 
   const { id: userId } = useAuth()
   if (!userId) {
-    throw new Error("we should be logged in by now")
+    throw new LoginRequiredError()
   }
 
   let votedAnswer: AnswerId | null = null

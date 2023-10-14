@@ -3,6 +3,7 @@ import { EntityId } from "@reduxjs/toolkit"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../../app/hook"
+import { UserNotFoundError } from "../../errors"
 import { validateUser } from "../auth/authSlice"
 import { selectUserById } from "./usersSlice"
 
@@ -13,7 +14,7 @@ const UserLoginCard = (props: { id: EntityId }) => {
 
   const user = useAppSelector((state) => selectUserById(state, props.id))
   if (!user) {
-    throw new Error("this should go to page 404")
+    throw new UserNotFoundError(props.id)
   }
 
   const handleLogin = (e: React.MouseEvent<HTMLDivElement>) => {

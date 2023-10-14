@@ -1,6 +1,7 @@
 import { act, screen } from "@testing-library/react"
 import { it } from "vitest"
 import { getQuestions, getUsers } from "../../api"
+import { QuestionNotFoundError, UserNotFoundError } from "../../errors"
 import { AnswerId, UserId } from "../../interfaces"
 import {
   initialAuth,
@@ -12,12 +13,12 @@ import { renderDefault } from "../../utils/test-utils"
 it("Test render", async () => {
   const question = Object.values(initialQuestions.entities)[0]
   if (!question) {
-    throw new Error("question must be defined")
+    throw new QuestionNotFoundError(question)
   }
 
   const author = initialUsers.entities[question.author]
   if (!author) {
-    throw new Error("author must be defined")
+    throw new UserNotFoundError(question.author)
   }
 
   renderDefault({
@@ -41,7 +42,7 @@ test.each(["optionOne", "optionTwo"])(
   async (answerId) => {
     const question = Object.values(initialQuestions.entities)[1]
     if (!question) {
-      throw new Error("question must be defined")
+      throw new QuestionNotFoundError(question)
     }
 
     const auth = initialAuth
