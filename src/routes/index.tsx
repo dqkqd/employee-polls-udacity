@@ -2,6 +2,7 @@ import Dashboard from "../components/Dashboard"
 import Home from "../components/Home"
 import Leaderboard from "../components/Leaderboard"
 import NewQuestion from "../components/NewQuestion"
+import { RequireAuth } from "../components/RequireAuth"
 import LoginPage from "../features/auth/LoginPage"
 import SignupPage from "../features/auth/SignupPage"
 import QuestionDetail from "../features/questions/QuestionDetail"
@@ -10,7 +11,11 @@ import UserLoginSelection from "../features/users/UserLoginSelection"
 export const routesConfig = [
   {
     path: "/",
-    element: <Dashboard />,
+    element: (
+      <RequireAuth>
+        <Dashboard />
+      </RequireAuth>
+    ),
     children: [
       {
         path: "home",
