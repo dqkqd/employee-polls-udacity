@@ -1,6 +1,13 @@
-import { EntityId, EntityState } from "@reduxjs/toolkit"
-import { saveQuestion, saveUser } from "../api"
+import { EntityState } from "@reduxjs/toolkit"
+import {
+  getQuestions,
+  getUsers,
+  saveQuestion,
+  saveQuestionAnswer,
+  saveUser,
+} from "../api"
 import { AuthedUser, Question, User } from "../interfaces"
+import { AnswerId } from "./../interfaces/index"
 
 const fakeUsers = [
   {
@@ -28,37 +35,76 @@ const fakeQuestions = [
     optionTwoText: "fake-question-2-option-two",
     author: fakeUsers[1].id,
   },
+  {
+    optionOneText: "fake-question-3-option-one",
+    optionTwoText: "fake-question-3-option-two",
+    author: fakeUsers[1].id,
+  },
+]
+
+const fakeQuestionsAnswers = [
+  {
+    userIndex: 0,
+    questionIndex: 2, // fake-question-3
+    answerId: "optionOne",
+  },
 ]
 
 export const initialAuth: AuthedUser = { ...fakeUsers[0], status: "success" }
 
-const setUpTestUsers = async (
-  users = fakeUsers,
-): Promise<EntityState<User>> => {
-  return Promise.all(users.map(async (user) => await saveUser(user))).then(
-    (formattedUsers) => {
-      const ids = formattedUsers.map((user) => user.id as EntityId)
-      const entities = Object.fromEntries(
-        formattedUsers.map((user) => [user.id as EntityId, user]),
-      )
-      return { ids, entities }
-    },
+const setupTestData = async () => {
+  const addedUsers = await Promise.all(
+    fakeUsers.map(async (user) => await saveUser(user)),
   )
+
+  const addedQuestions = await Promise.all(
+    fakeQuestions.map(async (question) => await saveQuestion(question)),
+  )
+
+  const addedAnswer = await Promise.all(
+    fakeQuestionsAnswers.map(
+      async ({ userIndex, questionIndex, answerId }) =>
+        await saveQuestionAnswer({
+          authedUser: addedUsers[userIndex].id,
+          qid: addedQuestions[questionIndex].id,
+          answerId: answerId as AnswerId,
+        }),
+    ),
+  )
+
+  if (!addedAnswer.every(Boolean)) {
+    throw new Error("Some questions answer are not added")
+  }
+
+  const allUsers = await getUsers()
+  const initialUsers: EntityState<User> = {
+    ids: Object.keys(allUsers),
+    entities: allUsers,
+  }
+
+  const allQuestions = await getQuestions()
+  const initialQuestions: EntityState<Question> = {
+    ids: Object.keys(allUsers),
+    entities: allQuestions,
+  }
+
+  // need to fetch added users and added questions again because we added answer
+  const addedUserIds = addedUsers.map((user) => user.id)
+  const fetchAddedUsers = Object.values(allUsers).filter((user) =>
+    addedUserIds.includes(user.id),
+  )
+  const addedQuestionIds = addedQuestions.map((question) => question.id)
+  const fetchAddedQuestions = Object.values(allQuestions).filter((question) =>
+    addedQuestionIds.includes(question.id),
+  )
+
+  return {
+    initialUsers,
+    initialQuestions,
+    addedUsers: fetchAddedUsers,
+    addedQuestions: fetchAddedQuestions,
+  }
 }
 
-const setUpTestQuestions = async (
-  questions = fakeQuestions,
-): Promise<EntityState<Question>> => {
-  return Promise.all(
-    questions.map(async (question) => await saveQuestion(question)),
-  ).then((formattedQuestions) => {
-    const ids = formattedQuestions.map((q) => q.id as EntityId)
-    const entities = Object.fromEntries(
-      formattedQuestions.map((q) => [q.id as EntityId, q]),
-    )
-    return { ids, entities }
-  })
-}
-
-export const initialUsers = await setUpTestUsers()
-export const initialQuestions = await setUpTestQuestions()
+export const { initialUsers, initialQuestions, addedUsers, addedQuestions } =
+  await setupTestData()
