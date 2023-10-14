@@ -19,10 +19,8 @@ describe("Test question card", () => {
       }),
     ).toBeInTheDocument()
 
-    const now = new Date(Date.now()).toUTCString()
-    const reg = new RegExp(now.slice(0, 16))
-    expect(screen.getByText(reg)).toBeInTheDocument()
-
+    const createdDate = new Date(question.timestamp).toUTCString()
+    expect(screen.getByText(createdDate)).toBeInTheDocument()
     expect(screen.getByRole("button", { name: "Show" })).toBeInTheDocument()
   })
 
