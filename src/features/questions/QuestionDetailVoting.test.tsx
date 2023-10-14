@@ -42,66 +42,94 @@ it("Test render", async () => {
   expect(screen.getAllByRole("button", { name: /vote/i })).toHaveLength(2)
 })
 
-test.each(["optionOne", "optionTwo"])(
-  "Successfully adding answer %s",
-  async (answerId) => {
-    const question = Object.values(initialQuestions.entities)[1]
-    if (!question) {
-      throw new QuestionNotFoundError(question)
-    }
-
-    const auth = initialAuth
-
-    const { store, user } = renderWithNoRoutes(
-      <QuestionDetailVoting
-        questionId={question.id}
-        optionOneText={question.optionOne.text}
-        optionTwoText={question.optionTwo.text}
-      />,
-      {
-        preloadedState: {
-          users: initialUsers,
-          questions: initialQuestions,
-          auth: initialAuth,
-        },
-      },
-    )
-
-    const buttons = screen.getAllByRole("button", { name: /vote/i })
-    const button = answerId === "optionOne" ? buttons[0] : buttons[1]
-
-    await act(async () => {
-      await user.click(button)
-    })
-
-    // make sure everything is added into database
-    await act(async () => {
-      await expect(
-        getUsers().then(
-          (users) => users[auth.id as UserId].answers[question.id],
-        ),
-      ).resolves.toBe(answerId)
-
-      await expect(
-        getQuestions().then(
-          (questions) => questions[question.id].optionOne.votes,
-        ),
-        // eslint-disable-next-line jest/valid-expect
-      ).resolves.to.includes(auth.id)
-    })
-
-    // make sure everything is added into store
-    expect(
-      store.getState().questions.entities[question.id]?.[answerId as AnswerId]
-        .votes,
-      // eslint-disable-next-line jest/valid-expect
-    ).to.includes(auth.id)
-
-    expect(
-      store.getState().users.entities[auth.id as UserId]?.answers[question.id],
-    ).toBe(answerId)
+test.each([
+  {
+    answerId: "optionOne",
+    questionIndex: 1,
+    isAuthor: false,
+    description: "Normal user can vote question with optionOne",
   },
-)
+  {
+    answerId: "optionTwo",
+    questionIndex: 1,
+    isAuthor: false,
+    description: "Normal user can vote question with optionTwo",
+  },
+  {
+    answerId: "optionOne",
+    questionIndex: 0,
+    isAuthor: true,
+    description: "Author can vote their own question with optionOne",
+  },
+  {
+    answerId: "optionTwo",
+    questionIndex: 0,
+    isAuthor: true,
+    description: "Author can vote their own question with optionTwo",
+  },
+])("$description", async ({ answerId, questionIndex, isAuthor }) => {
+  const question = Object.values(initialQuestions.entities)[questionIndex]
+  if (!question) {
+    throw new QuestionNotFoundError(question)
+  }
+
+  const auth = initialAuth
+
+  if (isAuthor && question.author !== auth.id) {
+    throw new Error("make sure author is voting their own question")
+  }
+
+  if (!isAuthor && question.author === auth.id) {
+    throw new Error("make sure user is voting other's question")
+  }
+
+  const { store, user } = renderWithNoRoutes(
+    <QuestionDetailVoting
+      questionId={question.id}
+      optionOneText={question.optionOne.text}
+      optionTwoText={question.optionTwo.text}
+    />,
+    {
+      preloadedState: {
+        users: initialUsers,
+        questions: initialQuestions,
+        auth: initialAuth,
+      },
+    },
+  )
+
+  const buttons = screen.getAllByRole("button", { name: /vote/i })
+  const button = answerId === "optionOne" ? buttons[0] : buttons[1]
+
+  await act(async () => {
+    await user.click(button)
+  })
+
+  // make sure everything is added into database
+  await act(async () => {
+    await expect(
+      getUsers().then((users) => users[auth.id as UserId].answers[question.id]),
+    ).resolves.toBe(answerId)
+
+    await expect(
+      getQuestions().then(
+        (questions) => questions[question.id].optionOne.votes,
+      ),
+      // eslint-disable-next-line jest/valid-expect
+    ).resolves.to.includes(auth.id)
+  })
+
+  // make sure everything is added into store
+  expect(
+    store.getState().questions.entities[question.id]?.[answerId as AnswerId]
+      .votes,
+    // eslint-disable-next-line jest/valid-expect
+  ).to.includes(auth.id)
+
+  expect(
+    store.getState().users.entities[auth.id as UserId]?.answers[question.id],
+  ).toBe(answerId)
+})
 
 it("Loading when voting new answer", async () => {
   const question = Object.values(initialQuestions.entities)[1]
