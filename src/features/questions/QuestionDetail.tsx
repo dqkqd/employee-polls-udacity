@@ -7,7 +7,9 @@ import {
   QuestionNotFoundError,
   UserNotFoundError,
 } from "../../errors"
+import { AnswerId } from "../../interfaces"
 import { selectUserById } from "../users/usersSlice"
+import QuestionDetailResult from "./QuestionDetailResult"
 import QuestionDetailVoting from "./QuestionDetailVoting"
 import { selectQuestionById } from "./questionsSlice"
 
@@ -33,11 +35,18 @@ const QuestionDetail = () => {
     throw new LoginRequiredError()
   }
 
+  let votedOption: AnswerId | null = null
+  if (question.optionOne.votes.includes(userId)) {
+    votedOption = "optionOne"
+  } else if (question.optionTwo.votes.includes(userId)) {
+    votedOption = "optionTwo"
+  }
+
   return (
     <>
       <Stack alignItems="center" justifyContent="center">
         <Typography variant="h5" fontWeight="bolder" m={5}>
-          Poll by {author.name}
+          Poll by {author.id === userId ? "You" : author.name}
         </Typography>
         <img
           src={author.avatarURL ?? ""}
@@ -50,11 +59,22 @@ const QuestionDetail = () => {
           }}
         />
 
-        <QuestionDetailVoting
-          questionId={question.id}
-          optionOneText={question.optionOne.text}
-          optionTwoText={question.optionTwo.text}
-        />
+        {votedOption === null ? (
+          <QuestionDetailVoting
+            questionId={question.id}
+            userId={userId}
+            optionOneText={question.optionOne.text}
+            optionTwoText={question.optionTwo.text}
+          />
+        ) : (
+          <QuestionDetailResult
+            optionOneText={question.optionOne.text}
+            optionTwoText={question.optionTwo.text}
+            optionOneTotalVotes={question.optionOne.votes.length}
+            optionTwoTotalVotes={question.optionTwo.votes.length}
+            votedOption={votedOption}
+          />
+        )}
       </Stack>
     </>
   )

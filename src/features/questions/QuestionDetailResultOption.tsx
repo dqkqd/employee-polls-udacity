@@ -10,7 +10,7 @@ const QuestionDetailResultOption = (props: {
   const percentage = (props.numberOfVotes / props.totalVotes) * 100
 
   return (
-    <Stack sx={{ width: "70%" }} p={5}>
+    <Stack sx={{ width: "70%" }} p={5} data-testid="detail-result-option">
       <Paper
         elevation={10}
         sx={{
