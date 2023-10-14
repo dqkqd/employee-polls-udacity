@@ -1,4 +1,11 @@
-import { Box, Grid, Stack, Typography } from "@mui/material"
+import {
+  Backdrop,
+  Box,
+  CircularProgress,
+  Grid,
+  Stack,
+  Typography,
+} from "@mui/material"
 import { EntityId } from "@reduxjs/toolkit"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
@@ -48,6 +55,8 @@ const QuestionDetail = () => {
     "idle" | "loading" | "succeeded" | "failed"
   >(votedAnswer !== null ? "succeeded" : "idle")
 
+  const loading = votingStatus === "loading"
+
   const selectAnswer = (answerId: AnswerId) => {
     const pick = async () => {
       if (votingStatus === "succeeded") {
@@ -68,6 +77,13 @@ const QuestionDetail = () => {
 
   return (
     <>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" data-testid="answer-loading" />
+      </Backdrop>
+
       <Stack alignItems="center" justifyContent="center">
         <Typography variant="h5" fontWeight="bolder" m={5}>
           Poll by {author.name}
@@ -93,6 +109,7 @@ const QuestionDetail = () => {
               <QuestionDetailOption
                 {...question.optionOne}
                 select={selectAnswer("optionOne")}
+                disabled={loading}
               />
             </Box>
           </Grid>
@@ -101,6 +118,7 @@ const QuestionDetail = () => {
               <QuestionDetailOption
                 {...question.optionTwo}
                 select={selectAnswer("optionTwo")}
+                disabled={loading}
               />
             </Box>
           </Grid>

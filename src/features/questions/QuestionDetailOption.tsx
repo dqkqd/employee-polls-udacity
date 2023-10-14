@@ -5,6 +5,7 @@ const QuestionDetailOption = (props: {
   text: string
   votes: string[]
   select: () => Promise<void>
+  disabled?: boolean
 }) => {
   return (
     <Stack alignItems="center" justifyContent="center" sx={{ width: "80%" }}>
@@ -31,6 +32,7 @@ const QuestionDetailOption = (props: {
           sx={{ borderRadius: 0, fontWeight: "bold", fontSize: 20 }}
           startIcon={<CheckCircleIcon />}
           onClick={props.select}
+          disabled={props.disabled}
         >
           Vote
         </Button>

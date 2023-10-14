@@ -91,3 +91,35 @@ test.each(["optionOne", "optionTwo"])(
     ).toBe(answerId)
   },
 )
+
+it("Loading when voting new answer", async () => {
+  const question = Object.values(initialQuestions.entities)[1]
+  if (!question) {
+    throw new QuestionNotFoundError(question)
+  }
+
+  const auth = initialAuth
+
+  const { user } = renderDefault({
+    route: `/questions/${question.id}`,
+    preloadedState: {
+      users: initialUsers,
+      questions: initialQuestions,
+      auth,
+    },
+  })
+
+  const buttons = screen.getAllByRole("button", { name: /vote/i })
+
+  expect(screen.queryByTestId("answer-loading")).not.toBeVisible()
+  expect(buttons[0]).toBeEnabled()
+  expect(buttons[1]).toBeEnabled()
+
+  await act(async () => {
+    await user.click(buttons[0])
+  })
+  expect(screen.getByTestId("answer-loading")).toBeVisible()
+
+  expect(buttons[0]).toBeDisabled()
+  expect(buttons[1]).toBeDisabled()
+})
