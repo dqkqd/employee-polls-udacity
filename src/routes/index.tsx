@@ -5,7 +5,7 @@ import NewQuestion from "../components/NewQuestion"
 import { RequireAuth } from "../components/RequireAuth"
 import LoginPage from "../features/auth/LoginPage"
 import SignupPage from "../features/auth/SignupPage"
-import QuestionDetailVoting from "../features/questions/QuestionDetailVoting"
+import QuestionDetail from "../features/questions/QuestionDetail"
 import UserLoginSelection from "../features/users/UserLoginSelection"
 
 export const routesConfig = [
@@ -32,7 +32,7 @@ export const routesConfig = [
 
       {
         path: "questions/:id",
-        element: <QuestionDetailVoting />,
+        element: <QuestionDetail />,
       },
     ],
   },
