@@ -85,7 +85,7 @@ const setupTestData = async () => {
     entities: allUsers,
   }
   const initialQuestions: EntityState<Question> = {
-    ids: Object.keys(allUsers),
+    ids: Object.keys(allQuestions),
     entities: allQuestions,
   }
 
