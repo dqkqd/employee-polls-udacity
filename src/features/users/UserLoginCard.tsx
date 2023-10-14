@@ -45,11 +45,7 @@ const UserLoginCard = (props: { id: EntityId }) => {
       <Grid container display="flex">
         <Grid item xs={4}>
           {user.avatarURL && (
-            <Avatar
-              sx={{ width: 60, height: 60 }}
-              src={user.avatarURL}
-              aria-label="user-login-avatar"
-            />
+            <Avatar sx={{ width: 60, height: 60 }} src={user.avatarURL} />
           )}
         </Grid>
 
