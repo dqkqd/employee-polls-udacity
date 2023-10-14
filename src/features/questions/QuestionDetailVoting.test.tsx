@@ -4,6 +4,7 @@ import { getQuestions, getUsers } from "../../api"
 import { QuestionNotFoundError, UserNotFoundError } from "../../errors"
 import { AnswerId, UserId } from "../../interfaces"
 import {
+  addedQuestions,
   initialAuth,
   initialQuestions,
   initialUsers,
@@ -45,33 +46,26 @@ it("Test render", async () => {
 test.each([
   {
     answerId: "optionOne",
-    questionIndex: 1,
     isAuthor: false,
     description: "Normal user can vote question with optionOne",
   },
   {
     answerId: "optionTwo",
-    questionIndex: 1,
     isAuthor: false,
     description: "Normal user can vote question with optionTwo",
   },
   {
     answerId: "optionOne",
-    questionIndex: 0,
     isAuthor: true,
     description: "Author can vote their own question with optionOne",
   },
   {
     answerId: "optionTwo",
-    questionIndex: 0,
     isAuthor: true,
     description: "Author can vote their own question with optionTwo",
   },
-])("$description", async ({ answerId, questionIndex, isAuthor }) => {
-  const question = Object.values(initialQuestions.entities)[questionIndex]
-  if (!question) {
-    throw new QuestionNotFoundError(question)
-  }
+])("$description", async ({ answerId, isAuthor }) => {
+  const question = isAuthor ? addedQuestions[0] : addedQuestions[1]
 
   const auth = initialAuth
 
