@@ -83,16 +83,56 @@ describe("Test save questions", () => {
   })
 })
 
-describe("Test save question's answers", () => {
-  let userId: string
-  let questionId: string
-
-  beforeAll(async () => {
+describe("Test get user", () => {
+  it("success", async () => {
     const users = await _getUsers()
-    const questions = await _getQuestions()
-    userId = Object.values(users)[0].id
-    questionId = Object.values(questions)[0].id
+    const user = Object.values(users)[0]
+    await expect(_getUser(user.id)).resolves.toStrictEqual(user)
   })
+  it("User does not exist", async () => {
+    await expect(_getUser("123")).rejects.toBe("User id '123' does not exist")
+  })
+})
+
+describe("Test save user", () => {
+  it("success", async () => {
+    const user = await _saveUser({
+      id: "123",
+      name: "abc",
+      password: "pw123",
+      avatarURL: "https://picsum.photos/200",
+    })
+
+    const users = await _getUsers()
+    expect(users[user.id]).toMatchObject(user)
+  })
+
+  describe("failed", () => {
+    describe("arguments should not be empty", () => {
+      test.each([
+        { id: "", name: "abc", password: "pw123" },
+        { id: "123", name: "", password: "pw123" },
+        { id: "123", name: "abc", password: "" },
+      ])(
+        "id is $id, name is $name, password is $password",
+        async ({ id, name, password }) => {
+          await expect(_saveUser({ id, name, password })).rejects.toBe(
+            "Please provide id, name, password",
+          )
+        },
+      )
+    })
+
+    it("User already existed", async () => {
+      const users = await _getUsers()
+      const userId = Object.values(users)[0].id
+
+      await expect(
+        _saveUser({ id: userId, name: "abc", password: "pw123" }),
+      ).rejects.toBe("User already existed")
+    })
+  })
+})
 
   describe("success", () => {
     test.each(["optionOne", "optionTwo"])(
@@ -186,57 +226,6 @@ describe("Test save question's answers", () => {
           }),
         ).rejects.toBe("Question id '123' does not exist")
       })
-    })
-  })
-})
-
-describe("Test get user", () => {
-  it("success", async () => {
-    const users = await _getUsers()
-    const user = Object.values(users)[0]
-    await expect(_getUser(user.id)).resolves.toStrictEqual(user)
-  })
-  it("User does not exist", async () => {
-    await expect(_getUser("123")).rejects.toBe("User id '123' does not exist")
-  })
-})
-
-describe("Test save user", () => {
-  it("success", async () => {
-    const user = await _saveUser({
-      id: "123",
-      name: "abc",
-      password: "pw123",
-      avatarURL: "https://picsum.photos/200",
-    })
-
-    const users = await _getUsers()
-    expect(users[user.id]).toMatchObject(user)
-  })
-
-  describe("failed", () => {
-    describe("arguments should not be empty", () => {
-      test.each([
-        { id: "", name: "abc", password: "pw123" },
-        { id: "123", name: "", password: "pw123" },
-        { id: "123", name: "abc", password: "" },
-      ])(
-        "id is $id, name is $name, password is $password",
-        async ({ id, name, password }) => {
-          await expect(_saveUser({ id, name, password })).rejects.toBe(
-            "Please provide id, name, password",
-          )
-        },
-      )
-    })
-
-    it("User already existed", async () => {
-      const users = await _getUsers()
-      const userId = Object.values(users)[0].id
-
-      await expect(
-        _saveUser({ id: userId, name: "abc", password: "pw123" }),
-      ).rejects.toBe("User already existed")
     })
   })
 })
