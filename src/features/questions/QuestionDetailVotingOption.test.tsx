@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react"
-import QuestionDetailOption from "./QuestionDetailOption"
+import QuestionDetailVotingOption from "./QuestionDetailVotingOption"
 
 it("Render", async () => {
   render(
-    <QuestionDetailOption
+    <QuestionDetailVotingOption
       text="First option"
       votes={[]}
       // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -16,7 +16,7 @@ it("Render", async () => {
 
 it("Button enabled", async () => {
   render(
-    <QuestionDetailOption
+    <QuestionDetailVotingOption
       text="First option"
       votes={[]}
       // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -29,7 +29,7 @@ it("Button enabled", async () => {
 
 it("Button disabled", async () => {
   render(
-    <QuestionDetailOption
+    <QuestionDetailVotingOption
       text="First option"
       votes={[]}
       // eslint-disable-next-line @typescript-eslint/no-empty-function

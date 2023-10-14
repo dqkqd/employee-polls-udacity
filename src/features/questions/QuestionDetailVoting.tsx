@@ -18,10 +18,10 @@ import {
 import { AnswerId } from "../../interfaces"
 import { pickAnswer } from "../common"
 import { selectUserById } from "../users/usersSlice"
-import QuestionDetailOption from "./QuestionDetailOption"
+import QuestionDetailVotingOption from "./QuestionDetailVotingOption"
 import { selectQuestionById } from "./questionsSlice"
 
-const QuestionDetail = () => {
+const QuestionDetailVoting = () => {
   const { id } = useParams()
   const dispatch = useAppDispatch()
 
@@ -109,7 +109,7 @@ const QuestionDetail = () => {
         <Grid container>
           <Grid item xs={6} px={1}>
             <Box display="flex" justifyContent="flex-end">
-              <QuestionDetailOption
+              <QuestionDetailVotingOption
                 {...question.optionOne}
                 select={selectAnswer("optionOne")}
                 canVote={canVote}
@@ -118,7 +118,7 @@ const QuestionDetail = () => {
           </Grid>
           <Grid item xs={6} px={1}>
             <Box display="flex" justifyContent="flex-start">
-              <QuestionDetailOption
+              <QuestionDetailVotingOption
                 {...question.optionTwo}
                 select={selectAnswer("optionTwo")}
                 canVote={canVote}
@@ -131,4 +131,4 @@ const QuestionDetail = () => {
   )
 }
 
-export default QuestionDetail
+export default QuestionDetailVoting

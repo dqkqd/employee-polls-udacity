@@ -1,7 +1,7 @@
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import { Button, Card, Stack, Typography } from "@mui/material"
 
-const QuestionDetailOption = (props: {
+const QuestionDetailVotingOption = (props: {
   text: string
   votes: string[]
   select: () => Promise<void>
@@ -41,4 +41,4 @@ const QuestionDetailOption = (props: {
   )
 }
 
-export default QuestionDetailOption
+export default QuestionDetailVotingOption
