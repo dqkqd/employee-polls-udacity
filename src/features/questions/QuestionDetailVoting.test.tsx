@@ -1,10 +1,11 @@
-import { act, screen } from "@testing-library/react"
+import { act, screen, waitFor } from "@testing-library/react"
 import { it } from "vitest"
 import { getQuestions, getUsers } from "../../api"
 import { QuestionNotFoundError, UserNotFoundError } from "../../errors"
 import { AnswerId, UserId } from "../../interfaces"
 import {
   addedQuestions,
+  addedUsers,
   initialAuth,
   initialQuestions,
   initialUsers,
@@ -47,22 +48,12 @@ test.each([
   {
     answerId: "optionOne",
     isAuthor: false,
-    description: "Normal user can vote question with optionOne",
-  },
-  {
-    answerId: "optionTwo",
-    isAuthor: false,
-    description: "Normal user can vote question with optionTwo",
+    description: "Normal user can vote question",
   },
   {
     answerId: "optionOne",
     isAuthor: true,
-    description: "Author can vote their own question with optionOne",
-  },
-  {
-    answerId: "optionTwo",
-    isAuthor: true,
-    description: "Author can vote their own question with optionTwo",
+    description: "Author can vote their own question",
   },
 ])("$description", async ({ answerId, isAuthor }) => {
   const question = isAuthor ? addedQuestions[0] : addedQuestions[1]
@@ -97,6 +88,12 @@ test.each([
 
   await act(async () => {
     await user.click(button)
+  })
+
+  await waitFor(() => {
+    expect(
+      screen.queryByText(`User id '${auth.id} already answer this question`),
+    ).not.toBeInTheDocument()
   })
 
   // make sure everything is added into database
@@ -159,4 +156,49 @@ it("Loading when voting new answer", async () => {
 
   expect(buttons[0]).toBeDisabled()
   expect(buttons[1]).toBeDisabled()
+})
+
+it("User can not vote the same question 2 times", async () => {
+  const question = addedQuestions[2]
+  const auth = initialAuth
+  const employee = addedUsers[0]
+
+  if (employee.id !== auth.id) {
+    throw new Error("make sure we are talking about the same employee")
+  }
+
+  if (
+    !question.optionOne.votes.includes(auth.id as string) &&
+    !question.optionTwo.votes.includes(auth.id as string) &&
+    !employee.answers[question.id]
+  ) {
+    throw new Error("user must voted this question before")
+  }
+
+  const { user } = renderWithNoRoutes(
+    <QuestionDetailVoting
+      questionId={question.id}
+      optionOneText={question.optionOne.text}
+      optionTwoText={question.optionTwo.text}
+    />,
+    {
+      preloadedState: {
+        users: initialUsers,
+        questions: initialQuestions,
+        auth: initialAuth,
+      },
+    },
+  )
+
+  const buttons = screen.getAllByRole("button", { name: /vote/i })
+
+  await act(async () => {
+    await user.click(buttons[0])
+  })
+
+  await waitFor(() => {
+    expect(
+      screen.getByText(`User id '${employee.id} already answer this question`),
+    ).toBeInTheDocument()
+  })
 })

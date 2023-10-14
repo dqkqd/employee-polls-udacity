@@ -265,6 +265,8 @@ export function _saveQuestionAnswer(answer: {
       reject(`Question id '${qid}' does not exist`)
     } else if (!["optionOne", "optionTwo"].includes(answerId)) {
       reject(`Answer should be 'optionOne' or 'optionTwo', not '${answerId}'`)
+    } else if (users[authedUser].answers[qid]) {
+      reject(`User id '${authedUser} already answer this question`)
     } else {
       setTimeout(() => {
         users = {

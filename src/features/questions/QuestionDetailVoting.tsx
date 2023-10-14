@@ -31,6 +31,8 @@ const QuestionDetailVoting = (props: {
   const loading = votingStatus === "loading"
   const canVote = votingStatus === "idle" || votingStatus === "failed"
 
+  const [errorMessage, setErrorMessage] = useState("")
+
   const selectAnswer = (answerId: AnswerId) => {
     const pick = async () => {
       if (votingStatus === "succeeded") {
@@ -44,7 +46,8 @@ const QuestionDetailVoting = (props: {
           answerId,
         }),
       ).unwrap()
-      setVotingStatus(response ? "succeeded" : "failed")
+      setVotingStatus(response.ok ? "succeeded" : "failed")
+      setErrorMessage(response.error ?? "")
     }
     return pick
   }
@@ -82,6 +85,12 @@ const QuestionDetailVoting = (props: {
           </Box>
         </Grid>
       </Grid>
+
+      {errorMessage && (
+        <Typography variant="h6" fontWeight="bold" m={3}>
+          {errorMessage}
+        </Typography>
+      )}
     </>
   )
 }

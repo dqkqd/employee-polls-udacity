@@ -9,20 +9,20 @@ export const pickAnswer = createAsyncThunk(
   async (
     option: { userId: UserId; questionId: QuestionId; answerId: AnswerId },
     { dispatch },
-  ) => {
+  ): Promise<{ ok: boolean; error?: string }> => {
     const { userId, questionId, answerId } = option
 
-    const response = await saveQuestionAnswer({
-      authedUser: userId,
-      qid: questionId,
-      answerId,
-    })
-
-    if (response) {
+    try {
+      await saveQuestionAnswer({
+        authedUser: userId,
+        qid: questionId,
+        answerId,
+      })
       dispatch(addQuestionAnswer({ userId, questionId, answerId }))
       dispatch(addUserAnswer({ userId, questionId, answerId }))
+      return { ok: true }
+    } catch (e) {
+      return { ok: false, error: e as string }
     }
-
-    return response
   },
 )
