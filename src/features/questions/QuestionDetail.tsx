@@ -1,13 +1,17 @@
 import { Box, Grid, Stack, Typography } from "@mui/material"
 import { EntityId } from "@reduxjs/toolkit"
+import { useState } from "react"
 import { useParams } from "react-router-dom"
-import { useAppSelector } from "../../app/hook"
+import { useAppDispatch, useAppSelector, useAuth } from "../../app/hook"
+import { AnswerId } from "../../interfaces"
+import { pickAnswer } from "../common"
 import { selectUserById } from "../users/usersSlice"
 import QuestionDetailOption from "./QuestionDetailOption"
 import { selectQuestionById } from "./questionsSlice"
 
 const QuestionDetail = () => {
   const { id } = useParams()
+  const dispatch = useAppDispatch()
 
   const question = useAppSelector((state) =>
     selectQuestionById(state, id as EntityId),
@@ -21,6 +25,40 @@ const QuestionDetail = () => {
   )
   if (!author) {
     throw new Error(`user ${question.author} does not exist`)
+  }
+
+  const { id: userId } = useAuth()
+  if (!userId) {
+    throw new Error("we should be logged in by now")
+  }
+
+  let votedAnswer: AnswerId | null = null
+  if (question.optionOne.votes.includes(userId)) {
+    votedAnswer = "optionOne"
+  } else if (question.optionTwo.votes.includes(userId)) {
+    votedAnswer = "optionTwo"
+  }
+
+  const [votingStatus, setVotingStatus] = useState<
+    "idle" | "loading" | "succeeded" | "failed"
+  >(votedAnswer !== null ? "succeeded" : "idle")
+
+  const selectAnswer = (answerId: AnswerId) => {
+    const pick = async () => {
+      if (votingStatus === "succeeded") {
+        return
+      }
+      setVotingStatus("loading")
+      const response = await dispatch(
+        pickAnswer({
+          userId,
+          questionId: question.id,
+          answerId,
+        }),
+      ).unwrap()
+      setVotingStatus(response ? "succeeded" : "failed")
+    }
+    return pick
   }
 
   return (
@@ -47,12 +85,18 @@ const QuestionDetail = () => {
         <Grid container>
           <Grid item xs={6} px={1}>
             <Box display="flex" justifyContent="flex-end">
-              <QuestionDetailOption {...question.optionOne} />
+              <QuestionDetailOption
+                {...question.optionOne}
+                select={selectAnswer("optionOne")}
+              />
             </Box>
           </Grid>
           <Grid item xs={6} px={1}>
             <Box display="flex" justifyContent="flex-start">
-              <QuestionDetailOption {...question.optionTwo} />
+              <QuestionDetailOption
+                {...question.optionTwo}
+                select={selectAnswer("optionTwo")}
+              />
             </Box>
           </Grid>
         </Grid>

@@ -1,7 +1,11 @@
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import { Button, Card, Stack, Typography } from "@mui/material"
 
-const QuestionDetailOption = (props: { text: string; votes: string[] }) => {
+const QuestionDetailOption = (props: {
+  text: string
+  votes: string[]
+  select: () => Promise<void>
+}) => {
   return (
     <Stack alignItems="center" justifyContent="center" sx={{ width: "80%" }}>
       <Card variant="outlined" sx={{ width: "80%" }}>
@@ -26,6 +30,7 @@ const QuestionDetailOption = (props: { text: string; votes: string[] }) => {
           size="large"
           sx={{ borderRadius: 0, fontWeight: "bold", fontSize: 20 }}
           startIcon={<CheckCircleIcon />}
+          onClick={props.select}
         >
           Vote
         </Button>

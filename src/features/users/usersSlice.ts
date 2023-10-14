@@ -1,4 +1,5 @@
 import {
+  PayloadAction,
   createAsyncThunk,
   createEntityAdapter,
   createSelector,
@@ -6,7 +7,13 @@ import {
 } from "@reduxjs/toolkit"
 import { getUsers, saveUser } from "../../api"
 import type { RootState } from "../../app/store"
-import type { PublicUser, User } from "../../interfaces"
+import type {
+  AnswerId,
+  PublicUser,
+  QuestionId,
+  User,
+  UserId,
+} from "../../interfaces"
 
 const usersAdapter = createEntityAdapter<User>()
 const initialState = usersAdapter.getInitialState()
@@ -34,13 +41,32 @@ export const addUser = createAsyncThunk(
 const usersSlice = createSlice({
   name: "users",
   initialState,
-  reducers: {},
+  reducers: {
+    addAnswer: (
+      state,
+      action: PayloadAction<{
+        userId: UserId
+        questionId: QuestionId
+        answerId: AnswerId
+      }>,
+    ) => {
+      const { userId, questionId, answerId } = action.payload
+      const user = state.entities[userId]
+      if (!user) {
+        throw new Error(`User ${userId} does not existed`)
+      }
+      user.answers[questionId] = answerId
+      return state
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchUsers.fulfilled, usersAdapter.setAll)
       .addCase(addUser.fulfilled, usersAdapter.addOne)
   },
 })
+
+export const { addAnswer: addUserAnswer } = usersSlice.actions
 
 export const {
   selectAll: selectAllUsers,

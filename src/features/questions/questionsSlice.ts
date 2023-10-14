@@ -1,11 +1,12 @@
 import {
+  PayloadAction,
   createAsyncThunk,
   createEntityAdapter,
   createSlice,
 } from "@reduxjs/toolkit"
 import { getQuestions } from "../../api"
 import type { RootState } from "../../app/store"
-import type { Question } from "../../interfaces"
+import type { AnswerId, Question, QuestionId, UserId } from "../../interfaces"
 
 const questionsAdapter = createEntityAdapter<Question>({
   sortComparer: (a, b) => b.timestamp - a.timestamp,
@@ -24,11 +25,28 @@ export const fetchQuestions = createAsyncThunk(
 const questionsSlice = createSlice({
   name: "questions",
   initialState,
-  reducers: {},
+  reducers: {
+    addAnswer: (
+      state,
+      action: PayloadAction<{
+        userId: UserId
+        questionId: QuestionId
+        answerId: AnswerId
+      }>,
+    ) => {
+      const { userId, questionId, answerId } = action.payload
+      const question = state.entities[questionId]
+      if (question) {
+        question[answerId].votes.push(userId)
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchQuestions.fulfilled, questionsAdapter.setAll)
   },
 })
+
+export const { addAnswer: addQuestionAnswer } = questionsSlice.actions
 
 export const {
   selectAll: selectAllQuestions,
