@@ -37,3 +37,13 @@ it("Authorized will be redirected to home", async () => {
     ).toBeInTheDocument()
   })
 })
+
+it("Automatically redirected after 5 seconds", async () => {
+  renderDefault({ route: "/invalid-route" })
+  await waitFor(
+    () => {
+      expect(screen.getByRole("button", { name: "Log In" })).toBeInTheDocument()
+    },
+    { timeout: 10000 },
+  )
+}, 10000)
