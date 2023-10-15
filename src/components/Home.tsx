@@ -1,4 +1,5 @@
-import { Box, Divider, Stack, Typography } from "@mui/material"
+import { Box, Divider, Stack, Tab, Tabs, Typography } from "@mui/material"
+import { useState } from "react"
 import { useAppSelector } from "../app/hook"
 import { LoginRequiredError, UserNotFoundError } from "../errors"
 import { selectAuthedUser } from "../features/auth/authSlice"
@@ -30,6 +31,16 @@ const Home = () => {
     .filter((qid) => !user.answers[qid])
     .map(String)
 
+  const [tabValue, setTabValue] = useState<"answered" | "unanswered">(
+    "unanswered",
+  )
+  const handleTabValueChange = (
+    event: React.SyntheticEvent,
+    newTabValue: "answered" | "unanswered",
+  ) => {
+    setTabValue(newTabValue)
+  }
+
   return (
     <Box display="flex" justifyContent="center">
       <Stack sx={{ width: "100%" }}>
@@ -45,11 +56,24 @@ const Home = () => {
 
         <Divider />
 
-        <div data-testid="unanswered-questions">
+        <Tabs
+          value={tabValue}
+          onChange={handleTabValueChange}
+          centered
+          sx={{ marginTop: 3 }}
+        >
+          <Tab label="New Questions" value="unanswered" />
+          <Tab label="Answered Questions" value="answered" />
+        </Tabs>
+
+        <div
+          data-testid="unanswered-questions"
+          hidden={tabValue !== "unanswered"}
+        >
           <QuestionList title="New questions" ids={unAnsweredQuestionIds} />
         </div>
 
-        <div data-testid="answered-questions">
+        <div data-testid="answered-questions" hidden={tabValue !== "answered"}>
           <QuestionList title="Answered questions" ids={answeredQuestionIds} />
         </div>
       </Stack>
