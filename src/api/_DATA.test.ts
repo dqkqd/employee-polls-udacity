@@ -94,19 +94,7 @@ describe("Test save questions", () => {
   })
 })
 
-describe("Test get user", () => {
-  it("success", async () => {
-    await expect(_getUser(userInDb.id)).resolves.toStrictEqual(userInDb)
-  })
-
-  it("User does not exist", async () => {
-    await expect(_getUser(randomUserId)).rejects.toBe(
-      `User id '${randomUserId}' does not exist`,
-    )
-  })
-})
-
-describe("Test save user", () => {
+describe("Test save and get user", () => {
   it("success", async () => {
     const user = await _saveUser({
       id: randomUserId,
@@ -134,10 +122,16 @@ describe("Test save user", () => {
       )
     })
 
-    it("User already existed", async () => {
+    it("save user already existed", async () => {
       await expect(
         _saveUser({ id: userInDb.id, name: "abc", password: "pw123" }),
       ).rejects.toBe("User already existed")
+    })
+
+    it("get user does not exist", async () => {
+      await expect(_getUser(randomUserId)).rejects.toBe(
+        `User id '${randomUserId}' does not exist`,
+      )
     })
   })
 })
