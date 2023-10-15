@@ -11,7 +11,9 @@ if (!employee) {
 }
 
 it("Render", () => {
-  renderWithNoRoutes(<LoginForm />)
+  const { baseElement } = renderWithNoRoutes(<LoginForm />)
+  expect(baseElement).toMatchSnapshot()
+
   expect(screen.getByLabelText("Employee ID")).toBeInTheDocument()
   expect(screen.getByLabelText("Password")).toBeInTheDocument()
   expect(screen.getByRole("button", { name: "Log In" })).toBeInTheDocument()

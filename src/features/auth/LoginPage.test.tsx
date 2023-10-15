@@ -4,7 +4,8 @@ import { renderWithNoRoutes } from "../../utils/test-utils"
 import LoginPage from "./LoginPage"
 
 it("Render", () => {
-  renderWithNoRoutes(<LoginPage />)
+  const { baseElement } = renderWithNoRoutes(<LoginPage />)
+  expect(baseElement).toMatchSnapshot()
 
   expect(screen.getByLabelText("log-in-page-title")).toHaveTextContent("Log In")
   expect(screen.getByLabelText("Employee ID")).toBeInTheDocument()

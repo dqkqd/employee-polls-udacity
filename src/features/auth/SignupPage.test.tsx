@@ -3,7 +3,8 @@ import { expect, it } from "vitest"
 import { renderDefault } from "../../utils/test-utils"
 
 it("Render", () => {
-  renderDefault({ route: "/signup" })
+  const { baseElement } = renderDefault({ route: "/signup" })
+  expect(baseElement).toMatchSnapshot()
 
   expect(screen.getByLabelText("sign-up-page-title")).toHaveTextContent(
     "Sign Up",

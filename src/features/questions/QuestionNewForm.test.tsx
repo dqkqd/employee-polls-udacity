@@ -11,7 +11,8 @@ import { renderDefault, renderWithNoRoutes } from "../../utils/test-utils"
 import QuestionNewForm from "./QuestionNewForm"
 
 it("Render", () => {
-  renderWithNoRoutes(<QuestionNewForm />)
+  const { baseElement } = renderWithNoRoutes(<QuestionNewForm />)
+  expect(baseElement).toMatchSnapshot()
 
   expect(
     screen.getByRole("textbox", { name: "First option" }),
