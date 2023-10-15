@@ -6,16 +6,17 @@ import {
   Typography,
 } from "@mui/material"
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { useAppDispatch, useAuth } from "../../app/hook"
+import { useLocation, useNavigate } from "react-router-dom"
+import { useAppDispatch, useAppSelector } from "../../app/hook"
 import PasswordInput from "./PasswordField"
-import { signupUser } from "./authSlice"
+import { selectAuthedUser, signupUser } from "./authSlice"
 
 const SignupForm = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+  const location = useLocation()
 
-  const auth = useAuth()
+  const auth = useAppSelector(selectAuthedUser)
 
   const [id, setId] = useState("")
   const [name, setName] = useState("")
@@ -49,7 +50,8 @@ const SignupForm = () => {
     dispatch(signupUser({ id, name, password, avatarURL: avatar })).then(
       (e) => {
         if (e.meta.requestStatus === "fulfilled") {
-          navigate("/home")
+          const from = location.state?.from?.pathname || "/home"
+          navigate(from, { state: { from: location } })
         }
       },
     )

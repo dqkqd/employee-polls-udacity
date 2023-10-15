@@ -1,7 +1,7 @@
 import { Avatar, Grid, Paper, Typography } from "@mui/material"
 import { EntityId } from "@reduxjs/toolkit"
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../../app/hook"
 import { UserNotFoundError } from "../../errors"
 import { validateUser } from "../auth/authSlice"
@@ -10,6 +10,8 @@ import { selectUserById } from "./usersSlice"
 const UserLoginCard = (props: { id: EntityId }) => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+  const location = useLocation()
+
   const [isHover, setIsHover] = useState(false)
 
   const user = useAppSelector((state) => selectUserById(state, props.id))
@@ -21,7 +23,8 @@ const UserLoginCard = (props: { id: EntityId }) => {
     e.preventDefault()
     dispatch(validateUser({ id: user.id, password: user.password })).then(
       () => {
-        navigate("/home")
+        const from = location.state?.from?.pathname || "/home"
+        navigate(from, { state: { from: location } })
       },
     )
   }

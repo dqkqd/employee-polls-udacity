@@ -1,15 +1,16 @@
 import { Button, CircularProgress, TextField, Typography } from "@mui/material"
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { useAppDispatch, useAuth } from "../../app/hook"
+import { useLocation, useNavigate } from "react-router-dom"
+import { useAppDispatch, useAppSelector } from "../../app/hook"
 import PasswordInput from "./PasswordField"
-import { validateUser } from "./authSlice"
+import { selectAuthedUser, validateUser } from "./authSlice"
 
 const LoginForm = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+  const location = useLocation()
 
-  const auth = useAuth()
+  const auth = useAppSelector(selectAuthedUser)
   const [id, setId] = useState("")
   const [password, setPassword] = useState("")
 
@@ -24,11 +25,13 @@ const LoginForm = () => {
     setId(e.target.value)
   }
 
-  const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    dispatch(validateUser({ id, password })).then(() => {
-      navigate("/home")
-    })
+    const response = await dispatch(validateUser({ id, password }))
+    if (response.meta.requestStatus === "fulfilled") {
+      const from = location.state?.from?.pathname || "/home"
+      navigate(from, { state: { from: location } })
+    }
   }
 
   return (
