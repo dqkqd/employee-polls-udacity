@@ -7,7 +7,7 @@ import {
 } from "@reduxjs/toolkit"
 import { getUsers, saveUser } from "../../api"
 import type { RootState } from "../../app/store"
-import { UserNotFoundError } from "../../errors"
+import { QuestionAlreadyExist, UserNotFoundError } from "../../errors"
 import type {
   AnswerId,
   PublicUser,
@@ -59,6 +59,21 @@ const usersSlice = createSlice({
       user.answers[questionId] = answerId
       return state
     },
+    addQuestion: (
+      state,
+      action: PayloadAction<{ userId: UserId; questionId: QuestionId }>,
+    ) => {
+      const { userId, questionId } = action.payload
+      const user = state.entities[userId]
+      if (!user) {
+        throw new UserNotFoundError(userId)
+      }
+      if (user.questions.includes(questionId)) {
+        throw new QuestionAlreadyExist(questionId)
+      }
+      user.questions.push(questionId)
+      return state
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -67,7 +82,8 @@ const usersSlice = createSlice({
   },
 })
 
-export const { addAnswer: addUserAnswer } = usersSlice.actions
+export const { addAnswer: addUserAnswer, addQuestion: addQuestionToUser } =
+  usersSlice.actions
 
 export const {
   selectAll: selectAllUsers,

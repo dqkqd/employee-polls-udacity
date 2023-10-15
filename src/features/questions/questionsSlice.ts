@@ -40,13 +40,15 @@ const questionsSlice = createSlice({
         question[answerId].votes.push(userId)
       }
     },
+    addQuestion: questionsAdapter.addOne,
   },
   extraReducers: (builder) => {
     builder.addCase(fetchQuestions.fulfilled, questionsAdapter.setAll)
   },
 })
 
-export const { addAnswer: addQuestionAnswer } = questionsSlice.actions
+export const { addAnswer: addQuestionAnswer, addQuestion } =
+  questionsSlice.actions
 
 export const {
   selectAll: selectAllQuestions,

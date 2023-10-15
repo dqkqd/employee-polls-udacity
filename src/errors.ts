@@ -21,3 +21,10 @@ export class QuestionNotFoundError extends Error {
     this.name = this.constructor.name
   }
 }
+
+export class QuestionAlreadyExist extends Error {
+  constructor(id?: QuestionId) {
+    super("Question already exist")
+    this.name = this.constructor.name
+  }
+}
