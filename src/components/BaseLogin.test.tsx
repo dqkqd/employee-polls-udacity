@@ -11,6 +11,9 @@ describe("Test Base Auth Page", () => {
 
     expect(screen.getByText("Employee Polls")).toBeInTheDocument()
     expect(screen.getByText("Basic Auth Page")).toBeInTheDocument()
-    expect(screen.getByRole("img")).toHaveAttribute("src", "login-logo.jpg")
+    expect(screen.getByRole("img")).toHaveAttribute(
+      "src",
+      "/src/login-logo.jpg",
+    )
   })
 })
