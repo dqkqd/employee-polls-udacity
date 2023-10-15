@@ -208,7 +208,7 @@ describe("Signup", () => {
 
     // should moved into home page now
     await waitFor(() => {
-      expect(screen.getByText(`Hello ${newUser.name}`)).toBeInTheDocument()
+      expect(screen.getByText(`Hello, ${newUser.name}`)).toBeInTheDocument()
     })
 
     const { auth, users } = store.getState()

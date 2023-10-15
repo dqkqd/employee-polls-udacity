@@ -50,7 +50,7 @@ describe("Test navbar", () => {
     })
 
     await waitFor(() => {
-      expect(screen.getByText(`Hello ${initialAuth.name}`)).toBeInTheDocument()
+      expect(screen.getByText(`Hello, ${initialAuth.name}`)).toBeInTheDocument()
     })
 
     expect(

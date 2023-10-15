@@ -21,6 +21,6 @@ it("Click card should allow to login", async () => {
   })
 
   await waitFor(() => {
-    expect(screen.getByText(`Hello ${employee.name}`)).toBeInTheDocument()
+    expect(screen.getByText(`Hello, ${employee.name}`)).toBeInTheDocument()
   })
 })

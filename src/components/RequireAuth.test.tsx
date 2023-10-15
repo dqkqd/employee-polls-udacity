@@ -1,6 +1,6 @@
 import { screen } from "@testing-library/react"
 import { it } from "vitest"
-import { initialAuth } from "../utils/test-data"
+import { initialAuth, initialUsers } from "../utils/test-data"
 import { renderDefault } from "../utils/test-utils"
 
 describe("Authorization", () => {
@@ -13,9 +13,9 @@ describe("Authorization", () => {
 
   it("User will not be redirected to /login if authorized", () => {
     renderDefault({
-      preloadedState: { auth: initialAuth },
+      preloadedState: { users: initialUsers, auth: initialAuth },
       route: "/home",
     })
-    expect(screen.getByText(`Hello ${initialAuth.name}`)).toBeInTheDocument()
+    expect(screen.getByText(`Hello, ${initialAuth.name}`)).toBeInTheDocument()
   })
 })

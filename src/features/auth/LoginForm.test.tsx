@@ -85,7 +85,7 @@ describe("Login", () => {
     })
 
     await waitFor(() => {
-      expect(screen.getByText(`Hello ${employee.name}`)).toBeInTheDocument()
+      expect(screen.getByText(`Hello, ${employee.name}`)).toBeInTheDocument()
     })
   })
 
