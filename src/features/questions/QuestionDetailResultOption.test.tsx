@@ -15,7 +15,7 @@ it("Normal render", () => {
   expect(
     screen.getByRole("heading", { name: "Option text" }),
   ).toBeInTheDocument()
-  expect(screen.getByText("3 votes")).toBeInTheDocument()
+  expect(screen.getByText("3 votes (30.00 %)")).toBeInTheDocument()
   expect(screen.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "30")
   expect(screen.queryByTestId("voted-icon")).not.toBeInTheDocument()
 })
@@ -43,6 +43,10 @@ test.each([0, 1])(
         voted={true}
       />,
     )
-    expect(screen.getByText(`${numberOfVotes} vote`)).toBeInTheDocument()
+
+    const percentage = (numberOfVotes * 10).toFixed(2)
+    expect(
+      screen.getByText(`${numberOfVotes} vote (${percentage} %)`),
+    ).toBeInTheDocument()
   },
 )

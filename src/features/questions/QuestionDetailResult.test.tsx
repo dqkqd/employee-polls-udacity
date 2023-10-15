@@ -23,8 +23,8 @@ it("Normal Render", () => {
   expect(
     screen.getByRole("heading", { name: "Second Option" }),
   ).toBeInTheDocument()
-  expect(screen.getByText("8 votes")).toBeInTheDocument()
-  expect(screen.getByText("12 votes")).toBeInTheDocument()
+  expect(screen.getByText("8 votes (40.00 %)")).toBeInTheDocument()
+  expect(screen.getByText("12 votes (60.00 %)")).toBeInTheDocument()
 
   // there are 2 bars
   const bars = screen.getAllByRole("progressbar")

@@ -53,7 +53,8 @@ const QuestionDetailResultOption = (props: {
           </Grid>
           <Grid item xs={2} textAlign="center">
             <Typography variant="body1" fontWeight="bold" pl={1}>
-              {props.numberOfVotes} vote{props.numberOfVotes > 1 && "s"}
+              {props.numberOfVotes} vote{props.numberOfVotes > 1 && "s"} (
+              {percentage.toFixed(2)} %)
             </Typography>
           </Grid>
         </Grid>
