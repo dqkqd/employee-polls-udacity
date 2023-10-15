@@ -138,3 +138,67 @@ describe("Navigate", () => {
     })
   })
 })
+
+describe("Keep previous location", () => {
+  it("valid route", async () => {
+    const { store, user } = renderDefault({ route: "/leaderboard" })
+    await waitFor(async () => {
+      expect(screen.getByRole("button", { name: "Log In" })).toBeInTheDocument()
+    })
+
+    const { users } = store.getState()
+    const employeeId = users.ids[0]
+    const employeePassword = users.entities[employeeId]?.password
+
+    await act(async () => {
+      await user.type(
+        screen.getByLabelText("Employee ID"),
+        employeeId as string,
+      )
+      await user.type(
+        screen.getByLabelText("Password"),
+        employeePassword as string,
+      )
+
+      await user.click(screen.getByRole("button", { name: "Log In" }))
+    })
+
+    // we should inside leaderboard instead of home
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", { level: 4, name: "Leader Board" }),
+      ).toBeInTheDocument()
+    })
+  })
+
+  it("Invalid route", async () => {
+    const { store, user } = renderDefault({ route: "/questions/1234" })
+    await waitFor(async () => {
+      expect(screen.getByRole("button", { name: "Log In" })).toBeInTheDocument()
+    })
+
+    const { users } = store.getState()
+    const employeeId = users.ids[0]
+    const employeePassword = users.entities[employeeId]?.password
+
+    await act(async () => {
+      await user.type(
+        screen.getByLabelText("Employee ID"),
+        employeeId as string,
+      )
+      await user.type(
+        screen.getByLabelText("Password"),
+        employeePassword as string,
+      )
+
+      await user.click(screen.getByRole("button", { name: "Log In" }))
+    })
+
+    // we should inside error page instead of home
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", { level: 1, name: "Oops!" }),
+      ).toBeInTheDocument()
+    })
+  })
+})
