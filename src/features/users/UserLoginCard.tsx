@@ -23,7 +23,10 @@ const UserLoginCard = (props: { id: EntityId }) => {
     e.preventDefault()
     dispatch(validateUser({ id: user.id, password: user.password })).then(
       () => {
-        const from = location.state?.from?.pathname || "/home"
+        let from = location.state?.from?.pathname
+        if (!from || from === "/") {
+          from = "/home"
+        }
         navigate(from, { state: { from: location } })
       },
     )

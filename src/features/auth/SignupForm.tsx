@@ -50,7 +50,10 @@ const SignupForm = () => {
     dispatch(signupUser({ id, name, password, avatarURL: avatar })).then(
       (e) => {
         if (e.meta.requestStatus === "fulfilled") {
-          const from = location.state?.from?.pathname || "/home"
+          let from = location.state?.from?.pathname
+          if (!from || from === "/") {
+            from = "/home"
+          }
           navigate(from, { state: { from: location } })
         }
       },

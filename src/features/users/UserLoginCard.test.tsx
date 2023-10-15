@@ -26,6 +26,28 @@ it("Click card should allow to login", async () => {
 })
 
 describe("Keep previous location", () => {
+  it("default route", async () => {
+    const { user } = renderDefault({ route: "/" })
+    await act(async () => {
+      await user.click(screen.getByText("Login using a sample account"))
+    })
+
+    const employee = addedUsers[0]
+    await act(async () => {
+      await user.click(screen.getByText(employee.name))
+    })
+
+    // we should inside home instead
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", {
+          level: 4,
+          name: `Hello, ${employee.name}`,
+        }),
+      ).toBeInTheDocument()
+    })
+  })
+
   it("valid route", async () => {
     const { user } = renderDefault({ route: "/leaderboard" })
     await act(async () => {

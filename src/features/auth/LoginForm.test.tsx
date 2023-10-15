@@ -140,6 +140,40 @@ describe("Navigate", () => {
 })
 
 describe("Keep previous location", () => {
+  it("default route", async () => {
+    const { store, user } = renderDefault({ route: "/" })
+    await waitFor(async () => {
+      expect(screen.getByRole("button", { name: "Log In" })).toBeInTheDocument()
+    })
+
+    const { users } = store.getState()
+    const employeeId = users.ids[0]
+    const employeePassword = users.entities[employeeId]?.password
+
+    await act(async () => {
+      await user.type(
+        screen.getByLabelText("Employee ID"),
+        employeeId as string,
+      )
+      await user.type(
+        screen.getByLabelText("Password"),
+        employeePassword as string,
+      )
+
+      await user.click(screen.getByRole("button", { name: "Log In" }))
+    })
+
+    // we should inside home instead
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", {
+          level: 4,
+          name: `Hello, ${employee.name}`,
+        }),
+      ).toBeInTheDocument()
+    })
+  })
+
   it("valid route", async () => {
     const { store, user } = renderDefault({ route: "/leaderboard" })
     await waitFor(async () => {

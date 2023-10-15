@@ -29,7 +29,10 @@ const LoginForm = () => {
     e.preventDefault()
     const response = await dispatch(validateUser({ id, password }))
     if (response.meta.requestStatus === "fulfilled") {
-      const from = location.state?.from?.pathname || "/home"
+      let from = location.state?.from?.pathname
+      if (!from || from === "/") {
+        from = "/home"
+      }
       navigate(from, { state: { from: location } })
     }
   }

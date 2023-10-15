@@ -264,6 +264,41 @@ describe("Signup", () => {
 })
 
 describe("Keep previous location", () => {
+  it("default route", async () => {
+    const { user } = renderDefault({ route: "/" })
+
+    await act(async () => {
+      await user.click(screen.getByText("Sign up"))
+    })
+
+    const inputEle = screen.getByLabelText("Employee ID")
+    const nameEle = screen.getByLabelText("Name")
+    const passwordEle = screen.getByLabelText("Password")
+    const repeatPasswordEle = screen.getByLabelText("Re-enter password")
+    const button = screen.getByRole("button", { name: "Sign up" })
+
+    const newUser = {
+      id: randomUUID(),
+      name: "John Wick",
+      password: "password123",
+    }
+
+    await act(async () => {
+      await user.type(inputEle, newUser.id)
+      await user.type(nameEle, newUser.name)
+      await user.type(passwordEle, newUser.password)
+      await user.type(repeatPasswordEle, newUser.password)
+      await user.click(button)
+    })
+
+    // we should inside home instead of default route
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", { level: 4, name: "Hello, John Wick" }),
+      ).toBeInTheDocument()
+    })
+  })
+
   it("valid route", async () => {
     const { user } = renderDefault({ route: "/leaderboard" })
 
