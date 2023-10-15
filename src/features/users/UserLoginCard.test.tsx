@@ -24,3 +24,44 @@ it("Click card should allow to login", async () => {
     expect(screen.getByText(`Hello, ${employee.name}`)).toBeInTheDocument()
   })
 })
+
+describe("Keep previous location", () => {
+  it("valid route", async () => {
+    const { user } = renderDefault({ route: "/leaderboard" })
+    await act(async () => {
+      await user.click(screen.getByText("Login using a sample account"))
+    })
+
+    const employee = addedUsers[0]
+    await act(async () => {
+      await user.click(screen.getByText(employee.name))
+    })
+
+    // we should inside leaderboard instead of home
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", { level: 4, name: "Leader Board" }),
+      ).toBeInTheDocument()
+    })
+  })
+
+  it("Invalid route", async () => {
+    const { user } = renderDefault({ route: "/questions/1234" })
+
+    await act(async () => {
+      await user.click(screen.getByText("Login using a sample account"))
+    })
+
+    const employee = addedUsers[0]
+    await act(async () => {
+      await user.click(screen.getByText(employee.name))
+    })
+
+    // we should inside error page instead of home
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", { level: 1, name: "Oops!" }),
+      ).toBeInTheDocument()
+    })
+  })
+})
