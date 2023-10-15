@@ -1,4 +1,5 @@
 import Dashboard from "../components/Dashboard"
+import ErrorPage from "../components/ErrorPage"
 import Home from "../components/Home"
 import Leaderboard from "../components/Leaderboard"
 import NewQuestion from "../components/NewQuestion"
@@ -16,6 +17,7 @@ export const routesConfig = [
         <Dashboard />
       </RequireAuth>
     ),
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "home",
