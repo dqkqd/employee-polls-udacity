@@ -11,8 +11,8 @@ import {
 } from "@mui/material"
 import { useState } from "react"
 import { Link } from "react-router-dom"
-import { useAppDispatch, useAuth } from "../app/hook"
-import { logoutUser } from "../features/auth/authSlice"
+import { useAppDispatch, useAppSelector } from "../app/hook"
+import { logoutUser, selectAuthedUser } from "../features/auth/authSlice"
 
 const Nav = () => {
   const dispatch = useAppDispatch()
@@ -25,7 +25,7 @@ const Nav = () => {
     setTabValue(newTabValue)
   }
 
-  const auth = useAuth()
+  const auth = useAppSelector(selectAuthedUser)
   const handleLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     dispatch(logoutUser())

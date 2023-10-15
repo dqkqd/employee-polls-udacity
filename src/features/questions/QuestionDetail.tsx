@@ -1,13 +1,14 @@
 import { Stack, Typography } from "@mui/material"
 import { EntityId } from "@reduxjs/toolkit"
 import { useParams } from "react-router-dom"
-import { useAppSelector, useAuth } from "../../app/hook"
+import { useAppSelector } from "../../app/hook"
 import {
   LoginRequiredError,
   QuestionNotFoundError,
   UserNotFoundError,
 } from "../../errors"
 import { AnswerId } from "../../interfaces"
+import { selectAuthedUser } from "../auth/authSlice"
 import { selectUserById } from "../users/usersSlice"
 import QuestionDetailResult from "./QuestionDetailResult"
 import QuestionDetailVoting from "./QuestionDetailVoting"
@@ -30,7 +31,7 @@ const QuestionDetail = () => {
     throw new UserNotFoundError(question.author)
   }
 
-  const { id: userId } = useAuth()
+  const { id: userId } = useAppSelector(selectAuthedUser)
   if (!userId) {
     throw new LoginRequiredError()
   }

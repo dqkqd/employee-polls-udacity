@@ -7,14 +7,15 @@ import {
 } from "@mui/material"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { useAppDispatch, useAuth } from "../../app/hook"
+import { useAppDispatch, useAppSelector } from "../../app/hook"
+import { selectAuthedUser } from "../auth/authSlice"
 import { createNewQuestion } from "../common"
 
 const QuestionNewForm = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
-  const auth = useAuth()
+  const auth = useAppSelector(selectAuthedUser)
 
   const [optionOneText, setOptionOneText] = useState("")
   const [optionTwoText, setOptionTwoText] = useState("")

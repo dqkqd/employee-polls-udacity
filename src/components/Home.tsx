@@ -1,12 +1,14 @@
 import { Box, Divider, Stack, Typography } from "@mui/material"
-import { useAppSelector, useAuth } from "../app/hook"
+import { useAppSelector } from "../app/hook"
 import { LoginRequiredError, UserNotFoundError } from "../errors"
+import { selectAuthedUser } from "../features/auth/authSlice"
 import QuestionList from "../features/questions/QuestionList"
 import { selectQuestionIds } from "../features/questions/questionsSlice"
 import { selectUserById } from "../features/users/usersSlice"
 
 const Home = () => {
-  const auth = useAuth()
+  const auth = useAppSelector(selectAuthedUser)
+
   if (!auth.id) {
     throw new LoginRequiredError()
   }
