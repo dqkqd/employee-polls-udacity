@@ -185,7 +185,7 @@ describe("Signup", () => {
     const button = screen.getByRole("button", { name: "Sign up" })
 
     const newUser = {
-      id: "123456",
+      id: crypto.randomUUID(),
       name: "John Wick",
       password: "password123",
     }
