@@ -4,7 +4,11 @@ import { getUsers } from "../../api"
 import { UserNotFoundError } from "../../errors"
 import { UsersDictionary } from "../../interfaces"
 import { initialUsers } from "../../utils/test-data"
-import { renderDefault, renderWithNoRoutes } from "../../utils/test-utils"
+import {
+  randomUUID,
+  renderDefault,
+  renderWithNoRoutes,
+} from "../../utils/test-utils"
 import SignupForm from "./SignupForm"
 
 it("Render", () => {
@@ -185,7 +189,7 @@ describe("Signup", () => {
     const button = screen.getByRole("button", { name: "Sign up" })
 
     const newUser = {
-      id: crypto.randomUUID(),
+      id: randomUUID(),
       name: "John Wick",
       password: "password123",
     }
@@ -274,7 +278,7 @@ describe("Keep previous location", () => {
     const button = screen.getByRole("button", { name: "Sign up" })
 
     const newUser = {
-      id: crypto.randomUUID(),
+      id: randomUUID(),
       name: "John Wick",
       password: "password123",
     }
@@ -309,7 +313,7 @@ describe("Keep previous location", () => {
     const button = screen.getByRole("button", { name: "Sign up" })
 
     const newUser = {
-      id: crypto.randomUUID(),
+      id: randomUUID(),
       name: "John Wick",
       password: "password123",
     }

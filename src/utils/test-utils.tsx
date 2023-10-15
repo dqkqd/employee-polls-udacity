@@ -128,3 +128,7 @@ export function renderWithNoRoutes(
     ...render(ui, { wrapper: Wrapper, ...renderOptions }),
   }
 }
+
+export function randomUUID() {
+  return new Date().getTime().toLocaleString()
+}

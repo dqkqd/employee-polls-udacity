@@ -1,3 +1,4 @@
+import { randomUUID } from "../utils/test-utils"
 import type { AnswerId, Question, User } from "./../interfaces/index"
 import {
   _getQuestions,
@@ -22,8 +23,8 @@ beforeAll(async () => {
 })
 
 beforeEach(() => {
-  randomUserId = crypto.randomUUID()
-  randomQuestionId = crypto.randomUUID()
+  randomUserId = randomUUID()
+  randomQuestionId = randomUUID()
 })
 
 describe("Test save questions", () => {
@@ -45,7 +46,7 @@ describe("Test save questions", () => {
 
   describe("failed", () => {
     it("author must be existed to add question", async () => {
-      const userId = crypto.randomUUID()
+      const userId = randomUUID()
       await expect(
         _saveQuestion({
           optionOneText: "option1",
@@ -142,7 +143,7 @@ describe("Test save question's answers", () => {
       "answerId is '%s'",
       async (answerId) => {
         const newUser = await _saveUser({
-          id: crypto.randomUUID(),
+          id: randomUUID(),
           password: "123",
           name: "123",
         })
