@@ -52,7 +52,7 @@ const Nav = () => {
               <Tab
                 label="NEW QUESTION"
                 value="new-question"
-                to="/questions/new"
+                to="/add"
                 component={Link}
               />
             </Tabs>

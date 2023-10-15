@@ -26,7 +26,7 @@ export const routesConfig = [
         element: <Leaderboard />,
       },
       {
-        path: "questions/new",
+        path: "add",
         element: <NewQuestion />,
       },
 

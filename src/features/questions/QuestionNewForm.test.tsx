@@ -137,7 +137,7 @@ describe("Submit", () => {
     const auth = initialAuth
 
     const { store, user } = renderDefault({
-      route: "/questions/new",
+      route: "/add",
       preloadedState: {
         users: initialUsers,
         questions: initialQuestions,
