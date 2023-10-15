@@ -1,5 +1,6 @@
 import { Box, Pagination, Paper, Stack, Typography } from "@mui/material"
 import { useState } from "react"
+import { PAGINATION_PER_PAGE } from "../../env"
 import { QuestionId } from "../../interfaces"
 import QuestionCard from "./QuestionCard"
 
@@ -12,9 +13,11 @@ const QuestionList = (props: { title: string; ids: QuestionId[] }) => {
     setPage(page)
   }
 
-  const perPage = 6
-  const totalPages = Math.ceil(props.ids.length / perPage)
-  const selectedIds = props.ids.slice(perPage * (page - 1), perPage * page)
+  const totalPages = Math.ceil(props.ids.length / PAGINATION_PER_PAGE)
+  const selectedIds = props.ids.slice(
+    PAGINATION_PER_PAGE * (page - 1),
+    PAGINATION_PER_PAGE * page,
+  )
 
   const questionCards = selectedIds.map((id) => (
     <QuestionCard key={id} id={id} />

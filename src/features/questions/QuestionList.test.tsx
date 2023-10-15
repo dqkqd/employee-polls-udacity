@@ -1,4 +1,5 @@
 import { act, screen } from "@testing-library/react"
+import { PAGINATION_PER_PAGE } from "../../env"
 import { Question } from "../../interfaces"
 import { addedQuestions, initialQuestions } from "../../utils/test-data"
 import { renderWithNoRoutes } from "../../utils/test-utils"
@@ -7,7 +8,7 @@ import QuestionList from "./QuestionList"
 it("Render", () => {
   const questions = addedQuestions
 
-  if (questions.length > 6) {
+  if (questions.length > PAGINATION_PER_PAGE) {
     throw new Error("too many questions to be render on the same page")
   }
 
@@ -49,7 +50,7 @@ it("Pagination", async () => {
     .map((heading) => heading.textContent)
 
   // the first one must be title, the next 6 ones are cards title
-  expect(textContents).toHaveLength(7)
+  expect(textContents).toHaveLength(PAGINATION_PER_PAGE + 1)
   expect(textContents[0]).toBe("My list")
   expect(authors).toEqual(expect.arrayContaining(textContents.slice(1)))
 
