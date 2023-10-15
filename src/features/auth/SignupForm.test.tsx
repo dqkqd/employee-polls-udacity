@@ -258,3 +258,75 @@ describe("Signup", () => {
     })
   })
 })
+
+describe("Keep previous location", () => {
+  it("valid route", async () => {
+    const { user } = renderDefault({ route: "/leaderboard" })
+
+    await act(async () => {
+      await user.click(screen.getByText("Sign up"))
+    })
+
+    const inputEle = screen.getByLabelText("Employee ID")
+    const nameEle = screen.getByLabelText("Name")
+    const passwordEle = screen.getByLabelText("Password")
+    const repeatPasswordEle = screen.getByLabelText("Re-enter password")
+    const button = screen.getByRole("button", { name: "Sign up" })
+
+    const newUser = {
+      id: crypto.randomUUID(),
+      name: "John Wick",
+      password: "password123",
+    }
+
+    await act(async () => {
+      await user.type(inputEle, newUser.id)
+      await user.type(nameEle, newUser.name)
+      await user.type(passwordEle, newUser.password)
+      await user.type(repeatPasswordEle, newUser.password)
+      await user.click(button)
+    })
+
+    // we should inside leaderboard instead of home
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", { level: 4, name: "Leader Board" }),
+      ).toBeInTheDocument()
+    })
+  })
+
+  it("Invalid route", async () => {
+    const { user } = renderDefault({ route: "/questions/1234" })
+
+    await act(async () => {
+      await user.click(screen.getByText("Sign up"))
+    })
+
+    const inputEle = screen.getByLabelText("Employee ID")
+    const nameEle = screen.getByLabelText("Name")
+    const passwordEle = screen.getByLabelText("Password")
+    const repeatPasswordEle = screen.getByLabelText("Re-enter password")
+    const button = screen.getByRole("button", { name: "Sign up" })
+
+    const newUser = {
+      id: crypto.randomUUID(),
+      name: "John Wick",
+      password: "password123",
+    }
+
+    await act(async () => {
+      await user.type(inputEle, newUser.id)
+      await user.type(nameEle, newUser.name)
+      await user.type(passwordEle, newUser.password)
+      await user.type(repeatPasswordEle, newUser.password)
+      await user.click(button)
+    })
+
+    // we should inside error page instead of home
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", { level: 1, name: "Oops!" }),
+      ).toBeInTheDocument()
+    })
+  })
+})
