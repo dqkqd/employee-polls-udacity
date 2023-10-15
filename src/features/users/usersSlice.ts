@@ -8,13 +8,7 @@ import {
 import { getUsers, saveUser } from "../../api"
 import type { RootState } from "../../app/store"
 import { QuestionAlreadyExist, UserNotFoundError } from "../../errors"
-import type {
-  AnswerId,
-  PublicUser,
-  QuestionId,
-  User,
-  UserId,
-} from "../../interfaces"
+import type { AnswerId, QuestionId, User, UserId } from "../../interfaces"
 
 const usersAdapter = createEntityAdapter<User>()
 const initialState = usersAdapter.getInitialState()
@@ -91,13 +85,13 @@ export const {
   selectIds: selectUserIds,
 } = usersAdapter.getSelectors<RootState>((state) => state.users)
 
-export const selectAllPublicUsers = createSelector(
+export const selectUsersSortedByScore = createSelector(
   [selectAllUsers],
-  (users): PublicUser[] =>
-    users.map((user) => ({
-      id: user.id,
-      name: user.name,
-      avatarURL: user.avatarURL,
-    })),
+  (users): User[] =>
+    users.slice().sort((lhs, rhs) => {
+      const lhsScore = Object.keys(lhs.answers).length + lhs.questions.length
+      const rhsScore = Object.keys(rhs.answers).length + rhs.questions.length
+      return rhsScore - lhsScore
+    }),
 )
 export default usersSlice.reducer

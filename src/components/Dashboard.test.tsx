@@ -69,7 +69,7 @@ describe("Test navbar", () => {
     })
 
     await waitFor(() => {
-      expect(screen.getByText("Welcome to leaderboard")).toBeInTheDocument()
+      expect(screen.getByText("Leader Board")).toBeInTheDocument()
     })
 
     expect(
