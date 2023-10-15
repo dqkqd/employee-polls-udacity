@@ -64,7 +64,7 @@ const Nav = () => {
               display: { md: "flex" },
               alignItems: "center",
               borderRadius: 50,
-              bgcolor: "#dc8a78",
+              bgcolor: "#ccc",
               padding: 1,
               marginY: 1,
               marginX: 5,
