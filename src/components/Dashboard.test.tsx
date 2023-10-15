@@ -88,7 +88,7 @@ describe("Test navbar", () => {
     })
 
     await waitFor(() => {
-      expect(screen.getByText("Welcome to new question")).toBeInTheDocument()
+      expect(screen.getByText(/create your own poll/i)).toBeInTheDocument()
     })
 
     expect(
