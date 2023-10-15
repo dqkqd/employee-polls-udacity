@@ -42,8 +42,14 @@ const Home = () => {
         </Typography>
 
         <Divider />
-        <QuestionList title="New questions" ids={unAnsweredQuestionIds} />
-        <QuestionList title="Answered questions" ids={answeredQuestionIds} />
+
+        <div data-testid="unanswered-questions">
+          <QuestionList title="New questions" ids={unAnsweredQuestionIds} />
+        </div>
+
+        <div data-testid="answered-questions">
+          <QuestionList title="Answered questions" ids={answeredQuestionIds} />
+        </div>
       </Stack>
     </Box>
   )
