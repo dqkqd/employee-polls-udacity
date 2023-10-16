@@ -8,6 +8,7 @@ import {
 } from "react-router-dom"
 import { useAppSelector } from "../app/hook"
 import { selectAuthedUser } from "../features/auth/authSlice"
+import Nav from "./Nav"
 
 const ErrorPage = () => {
   const auth = useAppSelector(selectAuthedUser)
@@ -23,29 +24,32 @@ const ErrorPage = () => {
   }
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      textAlign="center"
-      alignItems="center"
-      justifyContent="center"
-    >
-      <Typography variant="h1" mt={10}>
-        Oops!
-      </Typography>
-      <Typography variant="body1" mb={3}>
-        Sorry, an unexpected error has occurred.
-      </Typography>
-      <ErrorBoundary />
+    <>
+      {auth.status === "success" && <Nav />}
+      <Box
+        display="flex"
+        flexDirection="column"
+        textAlign="center"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Typography variant="h1" mt={10}>
+          Oops!
+        </Typography>
+        <Typography variant="body1" mb={3}>
+          Sorry, an unexpected error has occurred.
+        </Typography>
+        <ErrorBoundary />
 
-      <Typography variant="body1" mt={2}>
-        <Link to={route}>{redirectText}</Link>
-      </Typography>
+        <Typography variant="body1" mt={2}>
+          <Link to={route}>{redirectText}</Link>
+        </Typography>
 
-      <Typography variant="body1" mt={2}>
-        or You will be redirected in {timer} ...
-      </Typography>
-    </Box>
+        <Typography variant="body1" mt={2}>
+          or You will be redirected in {timer} ...
+        </Typography>
+      </Box>
+    </>
   )
 }
 

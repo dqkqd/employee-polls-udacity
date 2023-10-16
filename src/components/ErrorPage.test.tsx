@@ -47,3 +47,25 @@ it("Automatically redirected after 5 seconds", async () => {
     { timeout: 10000 },
   )
 }, 10000)
+
+it("Show nav bar on error page if user logged in", async () => {
+  renderDefault({
+    route: "/invalid-route",
+    preloadedState: { users: initialUsers, auth: initialAuth },
+  })
+  expect(
+    screen.getByRole("heading", { level: 1, name: "Oops!" }),
+  ).toBeInTheDocument()
+  expect(
+    screen.getByText("Sorry, an unexpected error has occurred."),
+  ).toBeInTheDocument()
+
+  expect(screen.getByRole("tab", { name: "HOME" })).toBeInTheDocument()
+  expect(screen.getByRole("tab", { name: "LEADERBOARD" })).toBeInTheDocument()
+  expect(screen.getByRole("tab", { name: "NEW QUESTION" })).toBeInTheDocument()
+
+  expect(screen.getByLabelText("user-nav-icon")).toHaveTextContent(
+    initialAuth.name as string,
+  )
+  expect(screen.getByRole("button", { name: "Log out" })).toBeInTheDocument()
+})
