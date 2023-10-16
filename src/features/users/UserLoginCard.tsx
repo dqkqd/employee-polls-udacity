@@ -1,9 +1,8 @@
 import { Avatar, Grid, Paper, Typography } from "@mui/material"
 import { EntityId } from "@reduxjs/toolkit"
 import { useState } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { Navigate, useLocation, useNavigate } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../../app/hook"
-import { UserNotFoundError } from "../../errors"
 import { validateUser } from "../auth/authSlice"
 import { selectUserById } from "./usersSlice"
 
@@ -13,14 +12,15 @@ const UserLoginCard = (props: { id: EntityId }) => {
   const location = useLocation()
 
   const [isHover, setIsHover] = useState(false)
-
   const user = useAppSelector((state) => selectUserById(state, props.id))
-  if (!user) {
-    throw new UserNotFoundError(props.id)
-  }
 
   const handleLogin = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault()
+
+    if (!user) {
+      return
+    }
+
     dispatch(validateUser({ id: user.id, password: user.password })).then(
       () => {
         let from = location.state?.from?.pathname
@@ -30,6 +30,10 @@ const UserLoginCard = (props: { id: EntityId }) => {
         navigate(from, { state: { from: location } })
       },
     )
+  }
+
+  if (!user) {
+    return <Navigate to="/error" />
   }
 
   return (

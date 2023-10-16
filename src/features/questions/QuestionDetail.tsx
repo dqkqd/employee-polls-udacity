@@ -1,12 +1,7 @@
 import { Stack, Typography } from "@mui/material"
 import { EntityId } from "@reduxjs/toolkit"
-import { useParams } from "react-router-dom"
+import { Navigate, useParams } from "react-router-dom"
 import { useAppSelector } from "../../app/hook"
-import {
-  LoginRequiredError,
-  QuestionNotFoundError,
-  UserNotFoundError,
-} from "../../errors"
 import { AnswerId } from "../../interfaces"
 import { selectAuthedUser } from "../auth/authSlice"
 import { selectUserById } from "../users/usersSlice"
@@ -20,27 +15,25 @@ const QuestionDetail = () => {
   const question = useAppSelector((state) =>
     selectQuestionById(state, id as EntityId),
   )
-  if (!question) {
-    throw new QuestionNotFoundError(id)
-  }
-
-  const author = useAppSelector((state) =>
-    selectUserById(state, question.author),
-  )
-  if (!author) {
-    throw new UserNotFoundError(question.author)
-  }
+  const author = useAppSelector((state) => {
+    if (question) {
+      return selectUserById(state, question.author)
+    }
+  })
 
   const { id: userId } = useAppSelector(selectAuthedUser)
-  if (!userId) {
-    throw new LoginRequiredError()
-  }
 
   let votedOption: AnswerId | null = null
-  if (question.optionOne.votes.includes(userId)) {
-    votedOption = "optionOne"
-  } else if (question.optionTwo.votes.includes(userId)) {
-    votedOption = "optionTwo"
+  if (question && userId) {
+    if (question.optionOne.votes.includes(userId)) {
+      votedOption = "optionOne"
+    } else if (question.optionTwo.votes.includes(userId)) {
+      votedOption = "optionTwo"
+    }
+  }
+
+  if (!author || !userId || !question) {
+    return <Navigate to="/error" />
   }
 
   return (

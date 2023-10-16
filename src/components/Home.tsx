@@ -1,7 +1,7 @@
 import { Box, Divider, Stack, Tab, Tabs, Typography } from "@mui/material"
 import { useState } from "react"
+import { Navigate } from "react-router-dom"
 import { useAppSelector } from "../app/hook"
-import { LoginRequiredError, UserNotFoundError } from "../errors"
 import { selectAuthedUser } from "../features/auth/authSlice"
 import QuestionList from "../features/questions/QuestionList"
 import { selectQuestionIds } from "../features/questions/questionsSlice"
@@ -10,26 +10,19 @@ import { selectUserById } from "../features/users/usersSlice"
 const Home = () => {
   const auth = useAppSelector(selectAuthedUser)
 
-  if (!auth.id) {
-    throw new LoginRequiredError()
-  }
-
   const user = useAppSelector((state) =>
     selectUserById(state, auth.id as string),
   )
-  if (!user) {
-    throw new UserNotFoundError()
-  }
 
   const questionIds = useAppSelector(selectQuestionIds)
 
   // don't take user.answers.keys as id directly, since they might not be sorted by created time
-  const answeredQuestionIds = questionIds
-    .filter((qid) => user.answers[qid])
-    .map(String)
-  const unAnsweredQuestionIds = questionIds
-    .filter((qid) => !user.answers[qid])
-    .map(String)
+  const answeredQuestionIds = user
+    ? questionIds.filter((qid) => user.answers[qid]).map(String)
+    : []
+  const unAnsweredQuestionIds = user
+    ? questionIds.filter((qid) => !user.answers[qid]).map(String)
+    : []
 
   const [tabValue, setTabValue] = useState<"answered" | "unanswered">(
     "unanswered",
@@ -39,6 +32,10 @@ const Home = () => {
     newTabValue: "answered" | "unanswered",
   ) => {
     setTabValue(newTabValue)
+  }
+
+  if (!user) {
+    return <Navigate to="/error" />
   }
 
   return (

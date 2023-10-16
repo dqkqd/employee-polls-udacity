@@ -10,9 +10,8 @@ import {
 import DoubleArrowIcon from "@mui/icons-material/DoubleArrow"
 
 import { EntityId } from "@reduxjs/toolkit"
-import { useNavigate } from "react-router-dom"
+import { Navigate, useNavigate } from "react-router-dom"
 import { useAppSelector } from "../../app/hook"
-import { QuestionNotFoundError } from "../../errors"
 import { selectQuestionById } from "./questionsSlice"
 
 const QuestionCard = (props: { id: EntityId }) => {
@@ -21,14 +20,14 @@ const QuestionCard = (props: { id: EntityId }) => {
   const question = useAppSelector((state) =>
     selectQuestionById(state, props.id),
   )
-  if (!question) {
-    throw new QuestionNotFoundError(props.id)
-  }
-
-  const createdDate = new Date(question.timestamp).toUTCString()
+  const createdDate = question ? new Date(question.timestamp).toUTCString() : ""
 
   const handleShowClick = () => {
     navigate(`/questions/${props.id}`)
+  }
+
+  if (!question) {
+    return <Navigate to="/error" />
   }
 
   return (

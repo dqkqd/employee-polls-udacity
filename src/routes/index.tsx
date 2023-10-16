@@ -50,6 +50,10 @@ export const routesConfig = [
     path: "/login/users",
     element: <UserLoginSelection />,
   },
+  {
+    path: "/error",
+    element: <ErrorPage />,
+  },
 ]
 
 export const notProtectedRoutes = ["/login", "/signup", "/login/users"]
